@@ -1,0 +1,2925 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة إدارة أستاذ أنور أبو ستيت</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f1f5f9;color:#0f172a}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#0f172a,#1e3a8a)}
+.login-card{width:min(430px,100%);background:#fff;border-radius:22px;padding:32px;box-shadow:0 20px 60px #0005}
+.logo{width:72px;height:72px;border-radius:18px;background:#1d4ed8;color:#fff;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:bold;margin:0 auto 18px}
+h1,h2,h3{margin-top:0}
+.login-card h1{text-align:center;margin-bottom:8px}
+.muted{color:#64748b}
+.login-card .muted{text-align:center;margin-bottom:24px}
+.field{margin-bottom:15px}
+.field label{display:block;font-weight:bold;margin-bottom:7px}
+.field input,.field select{width:100%;padding:12px 13px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;outline:none}
+.field input:focus,.field select:focus{border-color:#2563eb;box-shadow:0 0 0 3px #2563eb22}
+.btn{border:0;border-radius:10px;padding:11px 16px;font-weight:bold}
+.btn-primary{background:#2563eb;color:#fff}
+.btn-success{background:#16a34a;color:#fff}
+.btn-danger{background:#dc2626;color:#fff}
+.btn-secondary{background:#e2e8f0;color:#0f172a}
+.btn-warning{background:#f59e0b;color:#fff}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.full{width:100%}
+.error{color:#b91c1c;background:#fee2e2;border-radius:10px;padding:10px;margin-top:12px}
+.success{color:#166534;background:#dcfce7;border-radius:10px;padding:10px;margin-top:12px}
+
+.app{min-height:100vh}
+.topbar{height:68px;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:10}
+.brand{font-size:20px;font-weight:bold}
+.top-actions{display:flex;gap:8px}
+.layout{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - 68px)}
+.sidebar{background:#fff;border-left:1px solid #e2e8f0;padding:18px;position:sticky;top:68px;height:calc(100vh - 68px)}
+.nav-btn{width:100%;text-align:right;border:0;background:transparent;padding:13px 14px;border-radius:10px;margin-bottom:6px;color:#334155;font-weight:bold}
+.nav-btn:hover,.nav-btn.active{background:#dbeafe;color:#1d4ed8}
+.content{padding:24px;min-width:0}
+.page-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+.page-title h2{margin:0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:20px}
+.stat{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 10px #0f172a0b;border:1px solid #e2e8f0}
+.stat .num{font-size:28px;font-weight:bold;margin-top:7px}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:20px;box-shadow:0 2px 10px #0f172a0b;margin-bottom:20px}
+.card h3{margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{padding:12px 10px;border-bottom:1px solid #e2e8f0;text-align:right;white-space:nowrap}
+th{background:#f8fafc;color:#334155}
+.badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:bold}
+.badge-green{background:#dcfce7;color:#166534}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-yellow{background:#fef3c7;color:#92400e}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.filters{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
+.results-info{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.empty{text-align:center;padding:35px;color:#64748b}
+.modal{position:fixed;inset:0;background:#0007;display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal-box{background:#fff;width:min(800px,100%);max-height:90vh;overflow:auto;border-radius:18px;padding:22px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.close{border:0;background:#e2e8f0;border-radius:9px;width:38px;height:38px;font-size:20px}
+.question-item{border:1px solid #e2e8f0;border-radius:12px;padding:15px;margin-bottom:12px}
+.option-line{margin:6px 0;color:#475569}
+.notice{padding:12px;border-radius:10px;background:#eff6ff;color:#1e40af;margin-bottom:15px}
+@media(max-width:950px){
+.layout{grid-template-columns:1fr}.sidebar{position:static;height:auto;display:flex;overflow:auto;gap:7px;border-left:0;border-bottom:1px solid #e2e8f0}.nav-btn{min-width:150px;margin:0}.stats{grid-template-columns:1fr 1fr}.filters{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+.topbar{padding:0 12px}.brand{font-size:16px}.content{padding:14px}.grid2,.stats{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.sidebar{padding:10px}.sidebar .nav-btn{min-width:125px}
+}
+
+.result-questions {
+  margin-top: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.result-question {
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 15px;
+  background: #fff;
+}
+
+.result-question.result-correct {
+  border-right: 5px solid #16a34a;
+}
+
+.result-question.result-wrong {
+  border-right: 5px solid #dc2626;
+}
+
+.result-question-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.result-status {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.result-correct .result-status {
+  color: #16a34a;
+}
+
+.result-wrong .result-status {
+  color: #dc2626;
+}
+
+.result-question-text {
+  font-size: 16px;
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+
+.result-answer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.result-answer-grid > div {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+@media (max-width: 700px) {
+  .result-answer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+   شهادة نتيجة الطالب
+   ========================= */
+.certificate-preview{
+  background:#f8fafc;
+  border:1px solid #cbd5e1;
+  border-radius:16px;
+  padding:18px;
+}
+.certificate-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+.certificate-sheet{
+  width:210mm;
+  min-height:297mm;
+  margin:0 auto;
+  background:#fff;
+  padding:18mm;
+  border:8px double #1d4ed8;
+  box-shadow:0 10px 35px #0f172a22;
+  position:relative;
+  overflow:hidden;
+  direction:rtl;
+  color:#0f172a;
+  font-family:Tahoma,Arial,sans-serif;
+}
+.certificate-sheet:before{
+  content:"";
+  position:absolute;
+  inset:8mm;
+  border:1px solid #bfdbfe;
+  pointer-events:none;
+}
+.certificate-inner{
+  position:relative;
+  z-index:1;
+  text-align:center;
+}
+.certificate-brand{
+  font-size:20px;
+  font-weight:700;
+  color:#1d4ed8;
+  margin-top:4mm;
+}
+.certificate-title{
+  font-size:34px;
+  font-weight:900;
+  margin:10mm 0 4mm;
+  color:#0f172a;
+}
+.certificate-subtitle{
+  font-size:17px;
+  color:#475569;
+  margin-bottom:12mm;
+}
+.certificate-student{
+  border:2px solid #1d4ed8;
+  border-radius:14px;
+  padding:8mm 7mm;
+  margin-bottom:10mm;
+}
+.certificate-student-name{
+  font-size:27px;
+  font-weight:900;
+  margin-bottom:4mm;
+}
+.certificate-meta{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5mm;
+  text-align:right;
+}
+.certificate-meta-item{
+  background:#f8fafc;
+  border-radius:9px;
+  padding:4mm;
+}
+.certificate-meta-label{
+  color:#64748b;
+  font-size:12px;
+  margin-bottom:2mm;
+}
+.certificate-meta-value{
+  font-size:16px;
+  font-weight:800;
+}
+.certificate-score{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:5mm;
+  margin-bottom:10mm;
+}
+.certificate-score-box{
+  border:1px solid #cbd5e1;
+  border-radius:12px;
+  padding:6mm 3mm;
+}
+.certificate-score-label{
+  color:#64748b;
+  font-size:12px;
+  margin-bottom:2mm;
+}
+.certificate-score-value{
+  font-size:24px;
+  font-weight:900;
+}
+.certificate-grade{
+  font-size:25px;
+  font-weight:900;
+  margin:8mm 0;
+  color:#1d4ed8;
+}
+.certificate-message{
+  font-size:16px;
+  color:#475569;
+  line-height:1.9;
+  margin:8mm auto 16mm;
+  max-width:150mm;
+}
+.certificate-footer{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20mm;
+  margin-top:18mm;
+  text-align:center;
+}
+.certificate-sign{
+  border-top:1px solid #94a3b8;
+  padding-top:3mm;
+  font-weight:700;
+}
+.certificate-date{
+  margin-top:10mm;
+  color:#64748b;
+  font-size:12px;
+}
+.certificate-seal{
+  width:30mm;
+  height:30mm;
+  border:3px solid #1d4ed8;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 7mm;
+  font-weight:900;
+  color:#1d4ed8;
+  font-size:13px;
+  line-height:1.35;
+}
+@media(max-width:700px){
+  .certificate-sheet{
+    width:100%;
+    min-height:auto;
+    padding:10mm;
+    border-width:5px;
+  }
+  .certificate-meta,.certificate-score{
+    grid-template-columns:1fr;
+  }
+}
+@media print{
+  @page{
+    size:A4 portrait;
+    margin:0;
+  }
+  html,body{
+    margin:0!important;
+    padding:0!important;
+    background:#fff!important;
+  }
+  body *{
+    visibility:hidden!important;
+  }
+  #certificatePrintArea,
+  #certificatePrintArea *{
+    visibility:visible!important;
+  }
+  #certificatePrintArea{
+    display:block!important;
+    position:absolute!important;
+    inset:0!important;
+    width:210mm!important;
+    min-height:297mm!important;
+    background:#fff!important;
+  }
+  .certificate-sheet{
+    width:210mm!important;
+    min-height:297mm!important;
+    margin:0!important;
+    box-shadow:none!important;
+    border:8px double #1d4ed8!important;
+    border-radius:0!important;
+    page-break-after:avoid;
+  }
+  .no-print{
+    display:none!important;
+  }
+}
+
+
+/* =========================
+   الشهادة الاحترافية - الإصدار المطور
+========================= */
+
+.certificate-sheet {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+    color: #172033;
+    font-family: Tahoma, Arial, sans-serif;
+    border: 1.2mm solid #173b67;
+    box-shadow: 0 0 0 1mm #fff, 0 0 0 2mm #caa84a;
+}
+
+.certificate-inner {
+    min-height: calc(297mm - 2.4mm);
+    margin: 5mm;
+    border: 0.5mm solid #caa84a;
+    position: relative;
+    padding: 17mm 15mm 13mm;
+    text-align: center;
+    background:
+        radial-gradient(circle at 50% 10%, rgba(202,168,74,.09), transparent 25%),
+        linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
+}
+
+.certificate-inner::before,
+.certificate-inner::after {
+    content: "";
+    position: absolute;
+    width: 34mm;
+    height: 34mm;
+    border: 1px solid rgba(202,168,74,.65);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.certificate-inner::before {
+    top: -17mm;
+    right: -17mm;
+}
+
+.certificate-inner::after {
+    bottom: -17mm;
+    left: -17mm;
+}
+
+.certificate-brand {
+    font-size: 28px;
+    font-weight: 900;
+    color: #173b67;
+    letter-spacing: .2px;
+}
+
+.certificate-subtitle {
+    margin-top: 5px;
+    font-size: 16px;
+    color: #9b7622;
+    font-weight: 700;
+}
+
+.certificate-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 6px 16px;
+    border: 1px solid #d7c27a;
+    border-radius: 999px;
+    color: #6d5519;
+    background: #fffdf4;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.certificate-title {
+    margin-top: 18mm;
+    font-size: 34px;
+    line-height: 1.2;
+    font-weight: 900;
+    color: #173b67;
+}
+
+.certificate-title::after {
+    content: "";
+    display: block;
+    width: 55mm;
+    height: 1mm;
+    margin: 5mm auto 0;
+    background: linear-gradient(90deg, transparent, #caa84a, transparent);
+}
+
+.certificate-intro {
+    margin: 7mm auto 4mm;
+    max-width: 150mm;
+    font-size: 15px;
+    color: #667085;
+}
+
+.certificate-student {
+    margin-top: 5mm;
+    padding: 7mm 8mm;
+    border: 1px solid #d9e0ea;
+    border-radius: 5mm;
+    background: rgba(255,255,255,.92);
+}
+
+.certificate-student-name {
+    font-size: 27px;
+    font-weight: 900;
+    color: #172033;
+}
+
+.certificate-meta {
+    margin-top: 6mm;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4mm;
+    text-align: right;
+}
+
+.certificate-meta-item {
+    border: 1px solid #e0e6ee;
+    border-radius: 3mm;
+    padding: 3mm 4mm;
+    background: #f8fafc;
+}
+
+.certificate-meta-label {
+    font-size: 10px;
+    color: #7b8798;
+    margin-bottom: 1mm;
+}
+
+.certificate-meta-value {
+    font-size: 14px;
+    font-weight: 800;
+    color: #24344d;
+}
+
+.certificate-score {
+    margin-top: 8mm;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4mm;
+}
+
+.certificate-score-box {
+    padding: 5mm 3mm;
+    border-radius: 4mm;
+    background: #f8fafc;
+    border: 1px solid #dce3ec;
+}
+
+.certificate-score-label {
+    font-size: 11px;
+    color: #748094;
+    margin-bottom: 2mm;
+}
+
+.certificate-score-value {
+    font-size: 23px;
+    font-weight: 900;
+    color: #173b67;
+}
+
+.certificate-grade {
+    margin: 7mm auto 3mm;
+    font-size: 25px;
+    font-weight: 900;
+    color: #9b7622;
+}
+
+.certificate-message {
+    font-size: 14px;
+    color: #596579;
+}
+
+.certificate-seal {
+    width: 29mm;
+    height: 29mm;
+    margin: 7mm auto 0;
+    border: 1.5mm double #caa84a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #8a681d;
+    font-size: 11px;
+    line-height: 1.45;
+    font-weight: 900;
+    background: #fffdf4;
+    transform: rotate(-5deg);
+}
+
+.certificate-footer {
+    margin-top: 13mm;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30mm;
+    align-items: end;
+}
+
+.certificate-sign {
+    padding-top: 11mm;
+    border-top: 1px solid #98a3b3;
+    font-size: 12px;
+    color: #596579;
+}
+
+.certificate-sign:last-child {
+    color: #173b67;
+    font-weight: 800;
+}
+
+.certificate-date {
+    margin-top: 8mm;
+    font-size: 11px;
+    color: #7a8494;
+}
+
+.certificate-print-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 12px 0 4px;
+}
+
+.certificate-print-actions button {
+    min-width: 180px;
+}
+
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 0;
+    }
+
+    html,
+    body {
+        width: 210mm !important;
+        height: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+    }
+
+    body > *:not(#certificatePrintArea) {
+        display: none !important;
+    }
+
+    #certificatePrintArea {
+        display: block !important;
+        position: fixed !important;
+        inset: 0 !important;
+        width: 210mm !important;
+        height: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+    }
+
+    .certificate-sheet {
+        width: 210mm !important;
+        height: 297mm !important;
+        min-height: 297mm !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .certificate-inner {
+        min-height: calc(297mm - 2.4mm);
+    }
+}
+
+
+.detail-print-sheet {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: #fff;
+    color: #172033;
+    font-family: Tahoma, Arial, sans-serif;
+    border: 1.2mm solid #173b67;
+}
+
+.detail-print-inner {
+    margin: 5mm;
+    padding: 12mm;
+    border: 0.5mm solid #caa84a;
+}
+
+.detail-print-brand {
+    font-size: 24px;
+    font-weight: 900;
+    color: #173b67;
+    text-align: center;
+}
+
+.detail-print-subtitle,
+.detail-print-title {
+    text-align: center;
+}
+
+.detail-print-subtitle {
+    color: #9b7622;
+    margin-top: 4px;
+    font-weight: 700;
+}
+
+.detail-print-title {
+    font-size: 28px;
+    font-weight: 900;
+    margin: 10mm 0 6mm;
+}
+
+.detail-print-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3mm;
+    padding: 5mm;
+    background: #f8fafc;
+    border: 1px solid #dce3ec;
+    border-radius: 3mm;
+    line-height: 1.8;
+}
+
+.detail-print-summary {
+    margin: 6mm 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3mm;
+}
+
+.detail-print-summary > div {
+    border: 1px solid #dce3ec;
+    padding: 4mm 2mm;
+    text-align: center;
+    border-radius: 3mm;
+}
+
+.detail-print-summary b {
+    display: block;
+    font-size: 21px;
+    color: #173b67;
+}
+
+.detail-print-summary span {
+    font-size: 10px;
+    color: #748094;
+}
+
+.detail-print-question {
+    border: 1px solid #dce3ec;
+    border-radius: 3mm;
+    padding: 4mm;
+    margin-bottom: 3mm;
+    page-break-inside: avoid;
+}
+
+.detail-print-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 2mm;
+}
+
+.detail-print-text {
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.detail-print-answers {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 2mm;
+    font-size: 11px;
+    color: #596579;
+}
+
+.detail-ok { color: #147a4b; font-weight: 800; }
+.detail-bad { color: #b42318; font-weight: 800; }
+
+.detail-print-empty {
+    text-align: center;
+    padding: 15mm;
+    color: #667085;
+}
+
+.detail-print-footer {
+    margin-top: 8mm;
+    text-align: center;
+    color: #7a8494;
+    font-size: 10px;
+}
+
+@media print {
+    .detail-print-sheet {
+        width: 210mm !important;
+        min-height: 297mm !important;
+        margin: 0 !important;
+        border: 1.2mm solid #173b67 !important;
+    }
+}
+
+
+
+/* ===== Professional Dashboard Overview ===== */
+.dashboard-overview{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+  margin-bottom:22px;
+}
+.dashboard-card{
+  position:relative;
+  overflow:hidden;
+  min-height:132px;
+  padding:20px;
+  border:1px solid rgba(15,35,64,.09);
+  border-radius:18px;
+  background:linear-gradient(145deg,#fff,#f7f9fc);
+  box-shadow:0 8px 24px rgba(15,35,64,.07);
+}
+.dashboard-card::after{
+  content:"";
+  position:absolute;
+  width:90px;
+  height:90px;
+  left:-25px;
+  bottom:-35px;
+  border-radius:50%;
+  background:rgba(15,35,64,.035);
+}
+.dashboard-card-icon{
+  width:42px;
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:13px;
+  background:#eef3f8;
+  color:#17365d;
+  font-size:20px;
+  margin-bottom:13px;
+}
+.dashboard-card-label{
+  color:#667085;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:5px;
+}
+.dashboard-card-value{
+  color:#102a43;
+  font-size:30px;
+  font-weight:900;
+  line-height:1.1;
+}
+.dashboard-card-sub{
+  color:#7a8696;
+  font-size:12px;
+  margin-top:6px;
+}
+.dashboard-section{
+  background:#fff;
+  border:1px solid rgba(15,35,64,.08);
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 8px 24px rgba(15,35,64,.055);
+  margin-bottom:22px;
+}
+.dashboard-section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:16px;
+}
+.dashboard-section-title{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+  color:#102a43;
+}
+.dashboard-section-note{
+  color:#7a8696;
+  font-size:12px;
+}
+.dashboard-two-columns{
+  display:grid;
+  grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);
+  gap:20px;
+}
+.dashboard-ranking{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+.dashboard-rank-row{
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr) 75px;
+  align-items:center;
+  gap:10px;
+  padding:11px 12px;
+  border-radius:12px;
+  background:#f8fafc;
+  border:1px solid #edf1f5;
+}
+.dashboard-rank-num{
+  width:30px;
+  height:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:#17365d;
+  color:#fff;
+  font-size:12px;
+  font-weight:900;
+}
+.dashboard-rank-name{
+  min-width:0;
+  color:#243b53;
+  font-weight:800;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.dashboard-rank-exam{
+  color:#8a96a6;
+  font-size:11px;
+  margin-top:2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.dashboard-rank-score{
+  text-align:left;
+  color:#17365d;
+  font-weight:900;
+  direction:ltr;
+}
+.dashboard-progress-list{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.dashboard-progress-item{
+  display:grid;
+  grid-template-columns:150px minmax(0,1fr) 55px;
+  align-items:center;
+  gap:10px;
+}
+.dashboard-progress-name{
+  color:#334e68;
+  font-size:13px;
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.dashboard-progress-track{
+  height:9px;
+  border-radius:20px;
+  background:#edf1f5;
+  overflow:hidden;
+}
+.dashboard-progress-bar{
+  height:100%;
+  width:0;
+  border-radius:20px;
+  background:#17365d;
+  transition:width .4s ease;
+}
+.dashboard-progress-value{
+  color:#17365d;
+  font-size:12px;
+  font-weight:900;
+  text-align:left;
+  direction:ltr;
+}
+.dashboard-empty{
+  padding:28px 12px;
+  text-align:center;
+  color:#8a96a6;
+  font-size:13px;
+}
+.dashboard-refresh{
+  border:1px solid #d8e0e8;
+  background:#fff;
+  color:#17365d;
+  border-radius:10px;
+  padding:8px 13px;
+  cursor:pointer;
+  font-weight:800;
+}
+@media(max-width:1000px){
+  .dashboard-overview{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .dashboard-two-columns{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+  .dashboard-overview{grid-template-columns:1fr;}
+  .dashboard-card{min-height:115px;}
+  .dashboard-progress-item{grid-template-columns:105px minmax(0,1fr) 45px;}
+}
+
+
+/* ===== Offline canvas charts for the teacher dashboard ===== */
+.dashboard-chart-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px;align-items:stretch}
+.dashboard-chart-card{min-width:0}
+.dashboard-chart-wide{grid-column:1/-1}
+.dashboard-chart-wrap{height:270px;position:relative;width:100%;direction:ltr}
+.dashboard-chart-wrap canvas{display:block;width:100%;height:100%}
+.dashboard-donut-layout{display:grid;grid-template-columns:minmax(170px,.8fr) minmax(180px,1fr);gap:20px;align-items:center}
+.dashboard-donut-wrap{height:230px;max-width:330px;width:100%;margin:auto;direction:ltr}
+.dashboard-donut-wrap canvas{display:block;width:100%;height:100%}
+.dashboard-chart-legend{display:flex;flex-direction:column;gap:12px;color:#334e68;font-size:14px}
+.dashboard-chart-legend-item{display:flex;align-items:center;gap:10px;justify-content:flex-start}
+.dashboard-chart-swatch{width:12px;height:12px;border-radius:4px;flex:0 0 12px}
+.dashboard-chart-legend strong{margin-right:auto;color:#102a43;direction:ltr}
+@media(max-width:760px){.dashboard-chart-grid{grid-template-columns:1fr}.dashboard-chart-wide{grid-column:auto}.dashboard-donut-layout{grid-template-columns:1fr}.dashboard-donut-wrap{height:200px}.dashboard-chart-wrap{height:240px}}
+
+.results-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(130px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.results-stat-card {
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+    border: 1px solid #dbe3ec;
+    border-radius: 14px;
+    padding: 16px 12px;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(15,23,42,.05);
+}
+
+.results-stat-card span {
+    display: block;
+    color: #64748b;
+    font-size: 12px;
+    margin-bottom: 7px;
+}
+
+.results-stat-card strong {
+    display: block;
+    color: #173b67;
+    font-size: 24px;
+    font-weight: 900;
+}
+
+@media (max-width: 900px) {
+    .results-stat-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .results-stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+/* ===== تحسينات المرحلة الأولى: هوية بريق نور الكحلي والذهبي ===== */
+:root{
+  --bn-navy:#102a43;
+  --bn-navy2:#17365d;
+  --bn-gold:#c89b3c;
+  --bn-gold-soft:#fbf5e7;
+}
+.topbar{background:linear-gradient(120deg,#0b2035,#17365d 72%,#8b6826)}
+.logo{background:linear-gradient(135deg,#c89b3c,#e6c878);color:#102a43}
+.nav-btn:hover,.nav-btn.active{background:#fbf5e7;color:#8a641b;border-right:4px solid #c89b3c}
+.btn-primary{background:#17365d}
+.btn-primary:hover{background:#102a43}
+.dashboard-card{border-top:3px solid #c89b3c;background:linear-gradient(145deg,#fff,#fcfaf5)}
+.dashboard-card-icon{background:#fbf5e7;color:#8a641b}
+.dashboard-card-value{color:#102a43}
+.dashboard-section{border-top:2px solid #ead9ad}
+.dashboard-rank-num{background:linear-gradient(135deg,#17365d,#244d78)}
+.dashboard-rank-score,.dashboard-progress-value{color:#9a7020}
+.dashboard-progress-bar{background:linear-gradient(90deg,#17365d,#c89b3c)}
+.dashboard-refresh:hover{border-color:#c89b3c;background:#fbf5e7}
+.dashboard-recent-table{width:100%;border-collapse:collapse;min-width:620px}
+.dashboard-recent-table th,.dashboard-recent-table td{padding:11px 10px;text-align:right;border-bottom:1px solid #edf0f4;white-space:nowrap}
+.dashboard-recent-table th{background:#fbf5e7;color:#72551b;font-size:12px}
+.dashboard-recent-table td{font-size:13px}
+.dashboard-score-pill{display:inline-block;padding:5px 9px;border-radius:20px;background:#fbf5e7;color:#805d17;font-weight:900}
+.dashboard-recent-wrap{overflow:auto}
+.dashboard-error{padding:12px;border-radius:10px;background:#fff1f0;color:#a12a2a;border:1px solid #f4c7c3}
+@media(max-width:600px){.dashboard-recent-table{min-width:560px}}
+
+
+.student-level-badge{display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap;border:1px solid transparent}
+.student-level-excellent{color:#166534;background:#dcfce7;border-color:#bbf7d0}
+.student-level-good{color:#1d4ed8;background:#dbeafe;border-color:#bfdbfe}
+.student-level-follow{color:#92400e;background:#fef3c7;border-color:#fde68a}
+.student-level-support{color:#991b1b;background:#fee2e2;border-color:#fecaca}
+.student-level-none{color:#475569;background:#f1f5f9;border-color:#e2e8f0}
+</style>
+</head>
+<body>
+
+<div id="loginPage" class="login-page">
+  <div class="login-card">
+    <div class="logo">أ</div>
+    <h1>لوحة الإدارة</h1>
+    <p class="muted">أستاذ أنور أبو ستيت — الدراسات الاجتماعية</p>
+    <div class="field">
+      <label>كلمة المرور</label>
+      <input id="password" type="password" placeholder="أدخل كلمة المرور">
+    </div>
+    <button class="btn btn-primary full" onclick="login()">دخول لوحة الإدارة</button>
+    <div id="loginError"></div>
+  </div>
+</div>
+
+<div id="app" class="app hidden">
+  <header class="topbar">
+    <div class="brand">لوحة أستاذ أنور أبو ستيت</div>
+    <div class="top-actions">
+      <button class="btn btn-secondary" onclick="openStudentSite()">الموقع</button>
+      <button class="btn btn-danger" onclick="logout()">خروج</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <button class="nav-btn active" data-page="dashboard" onclick="showPage('dashboard')">📊 الرئيسية</button>
+      <button class="nav-btn" data-page="exams" onclick="showPage('exams')">📝 الامتحانات</button>
+      <button class="nav-btn" data-page="questions" onclick="showPage('questions')">❓ الأسئلة</button>
+      <button class="nav-btn" data-page="results" onclick="showPage('results')">🏆 النتائج</button>
+      <button class="nav-btn" data-page="students" onclick="showPage('students')">👨‍🎓 حسابات الطلاب</button>
+    </aside>
+
+    <main class="content">
+
+<!-- ===== Professional Dashboard Overview ===== -->
+<section id="dashboardOverview" class="dashboard-overview">
+  <div class="dashboard-card">
+    <div class="dashboard-card-icon">📚</div>
+    <div class="dashboard-card-label">إجمالي الامتحانات</div>
+    <div id="dashExamCount" class="dashboard-card-value">0</div>
+    <div id="dashExamSub" class="dashboard-card-sub">0 منشور</div>
+  </div>
+  <div class="dashboard-card">
+    <div class="dashboard-card-icon">❓</div>
+    <div class="dashboard-card-label">إجمالي الأسئلة</div>
+    <div id="dashQuestionCount" class="dashboard-card-value">0</div>
+    <div id="dashQuestionSub" class="dashboard-card-sub">في جميع الامتحانات</div>
+  </div>
+  <div class="dashboard-card">
+    <div class="dashboard-card-icon">👨‍🎓</div>
+    <div class="dashboard-card-label">عدد الطلاب</div>
+    <div id="dashStudentCount" class="dashboard-card-value">0</div>
+    <div class="dashboard-card-sub">كل حسابات الطلاب المسجلة</div>
+  </div>
+  <div class="dashboard-card">
+    <div class="dashboard-card-icon">🏆</div>
+    <div class="dashboard-card-label">متوسط النتائج</div>
+    <div id="dashAverage" class="dashboard-card-value">0%</div>
+    <div id="dashPassRate" class="dashboard-card-sub">نسبة النجاح: 0%</div>
+  </div>
+</section>
+
+<section id="dashboardPerformanceFilters" class="dashboard-section" style="margin-bottom:18px;padding:16px 18px;">
+  <div class="dashboard-section-head"><div><h3 class="dashboard-section-title">🔎 تحليل أداء الطلاب</h3><div class="dashboard-section-note">اختَر فصلًا أو امتحانًا لتحديث الترتيب والرسوم والنتائج المعروضة.</div></div><button class="dashboard-refresh" type="button" onclick="resetDashboardFilters()">إلغاء الفلاتر</button></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+    <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:#425466;">الفصل الدراسي
+      <select id="dashboardClassFilter" onchange="loadDashboardOverview()" style="width:100%;padding:11px;border:1px solid #d9e0e8;border-radius:10px;background:#fff;font:inherit;color:#102a43;"><option value="">كل الفصول</option></select>
+    </label>
+    <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:#425466;">الامتحان
+      <select id="dashboardExamFilter" onchange="loadDashboardOverview()" style="width:100%;padding:11px;border:1px solid #d9e0e8;border-radius:10px;background:#fff;font:inherit;color:#102a43;"><option value="">كل الامتحانات</option></select>
+    </label>
+  </div>
+</section>
+
+<section id="dashboardAnalytics" class="dashboard-two-columns">
+  <div class="dashboard-section">
+    <div class="dashboard-section-head">
+      <div>
+        <h3 class="dashboard-section-title">🏆 أفضل الطلاب</h3>
+        <div class="dashboard-section-note">حسب متوسط درجات الطالب في جميع المحاولات</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <button class="dashboard-refresh" type="button" onclick="exportDashboardStudentReport()">تصدير CSV</button>
+        <button class="dashboard-refresh" type="button" onclick="printDashboardStudentReport()">طباعة التقرير</button>
+        <button class="dashboard-refresh" type="button" onclick="loadDashboardOverview()">تحديث</button>
+      </div>
+    </div>
+    <div id="dashboardTopStudents" class="dashboard-ranking">
+      <div class="dashboard-empty">جاري تحميل البيانات...</div>
+    </div>
+  </div>
+
+  <div class="dashboard-section">
+    <div class="dashboard-section-head">
+      <div>
+        <h3 class="dashboard-section-title">📊 الامتحانات الأكثر استخدامًا</h3>
+        <div class="dashboard-section-note">حسب عدد محاولات الطلاب</div>
+      </div>
+    </div>
+    <div id="dashboardExamUsage" class="dashboard-progress-list">
+      <div class="dashboard-empty">جاري تحميل البيانات...</div>
+    </div>
+  </div>
+</section>
+
+<section id="dashboardCharts" class="dashboard-chart-grid">
+  <div class="dashboard-section dashboard-chart-card">
+    <div class="dashboard-section-head"><div><h3 class="dashboard-section-title">📈 تطور محاولات الطلاب</h3><div class="dashboard-section-note">عدد المحاولات المسجلة خلال آخر 7 أيام</div></div></div>
+    <div class="dashboard-chart-wrap"><canvas id="dashAttemptsChart" role="img" aria-label="رسم بياني لعدد محاولات الطلاب خلال آخر سبعة أيام"></canvas></div>
+  </div>
+  <div class="dashboard-section dashboard-chart-card">
+    <div class="dashboard-section-head"><div><h3 class="dashboard-section-title">📊 متوسط الدرجات حسب الامتحان</h3><div class="dashboard-section-note">متوسط النسبة المئوية لكل امتحان من النتائج المتاحة</div></div></div>
+    <div class="dashboard-chart-wrap"><canvas id="dashExamAverageChart" role="img" aria-label="رسم بياني لمتوسط درجات الامتحانات"></canvas></div>
+  </div>
+  <div class="dashboard-section dashboard-chart-card dashboard-chart-wide">
+    <div class="dashboard-section-head"><div><h3 class="dashboard-section-title">🎯 توزيع النتائج</h3><div class="dashboard-section-note">النجاح: 50% فأكثر · يحتاج إلى مراجعة: أقل من 50%</div></div></div>
+    <div class="dashboard-donut-layout"><div class="dashboard-donut-wrap"><canvas id="dashPassChart" role="img" aria-label="رسم دائري لتوزيع النتائج إلى ناجح ويحتاج إلى مراجعة"></canvas></div><div id="dashPassLegend" class="dashboard-chart-legend"></div></div>
+  </div>
+</section>
+
+<section id="dashboardRecentSection" class="dashboard-section">
+  <div class="dashboard-section-head">
+    <div>
+      <h3 class="dashboard-section-title">🕒 أحدث نتائج الطلاب</h3>
+      <div class="dashboard-section-note">آخر المحاولات المسجلة في قاعدة البيانات</div>
+    </div>
+    <button class="dashboard-refresh" type="button" onclick="showPage('results')">عرض كل النتائج</button>
+  </div>
+  <div class="dashboard-recent-wrap" id="dashboardRecentResults">
+    <div class="dashboard-empty">جاري تحميل النتائج...</div>
+  </div>
+</section>
+
+
+      <section id="page-dashboard">
+        <div class="page-title"><h2>الرئيسية</h2></div>
+        <div class="stats">
+          <div class="stat"><div class="muted">عدد الصفوف</div><div class="num" id="statClasses">0</div></div>
+          <div class="stat"><div class="muted">عدد الامتحانات</div><div class="num" id="statExams">0</div></div>
+          <div class="stat"><div class="muted">الامتحانات المنشورة</div><div class="num" id="statPublished">0</div></div>
+          <div class="stat"><div class="muted">عدد النتائج</div><div class="num" id="statResults">0</div></div>
+        </div>
+        <div class="card">
+          <h3>مرحبًا بك 👋</h3>
+          <p class="muted">من هنا يمكنك إنشاء امتحانات الدراسات الاجتماعية، إضافة الأسئلة، نشر الامتحانات، ومتابعة نتائج الطلاب.</p>
+        </div>
+      </section>
+
+      <section id="page-exams" class="hidden">
+        <div class="page-title"><h2>إدارة الامتحانات</h2></div>
+
+        <div class="card">
+          <h3>إنشاء امتحان جديد</h3>
+          <div class="grid2">
+            <div class="field">
+              <label>اسم الامتحان</label>
+              <input id="examTitle" placeholder="مثال: امتحان الوحدة الأولى">
+            </div>
+            <div class="field">
+              <label>الصف</label>
+              <select id="examClass"></select>
+            </div>
+            <div class="field">
+              <label>مدة الامتحان بالدقائق</label>
+              <input id="examDuration" type="number" min="1" value="30">
+            </div>
+            <div class="field">
+              <label>النشر</label>
+              <select id="examPublished">
+                <option value="0">غير منشور</option>
+                <option value="1">منشور</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="createExam()">إنشاء الامتحان</button>
+          <div id="examMessage"></div>
+        </div>
+
+        <div class="card">
+          <h3>الامتحانات الحالية</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>#</th><th>الامتحان</th><th>الصف</th><th>المدة</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+              <tbody id="examsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-questions" class="hidden">
+        <div class="page-title"><h2>إدارة الأسئلة</h2></div>
+        <div class="card">
+          <h3>اختيار الامتحان</h3>
+          <select id="questionExam" onchange="loadQuestions()" style="width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px"></select>
+        </div>
+
+        <div class="card">
+          <h3>إضافة سؤال</h3>
+          <div class="field">
+            <label>السؤال</label>
+            <textarea id="questionText" rows="4" style="width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;resize:vertical" placeholder="اكتب السؤال هنا"></textarea>
+          </div>
+          <div class="grid2">
+            <div class="field"><label>أ</label><input id="optionA"></div>
+            <div class="field"><label>ب</label><input id="optionB"></div>
+            <div class="field"><label>ج</label><input id="optionC"></div>
+            <div class="field"><label>د</label><input id="optionD"></div>
+          </div>
+          <div class="field">
+            <label>الإجابة الصحيحة</label>
+            <select id="correctAnswer">
+              <option value="a">أ</option><option value="b">ب</option><option value="c">ج</option><option value="d">د</option>
+            </select>
+          </div>
+          <button class="btn btn-success" onclick="addQuestion()">إضافة السؤال</button>
+          <div id="questionMessage"></div>
+        </div>
+
+        <div class="card">
+          <h3>أسئلة الامتحان</h3>
+          <div id="questionsList"></div>
+        </div>
+      </section>
+
+      <section id="page-students" class="hidden">
+        <div class="page-title">
+          <h2>حسابات الطلاب</h2>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="loadStudents()">تحديث القائمة</button>
+            <button class="btn btn-primary" onclick="exportStudentsCsv()">تنزيل كشف الطلاب والدرجات CSV</button>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="muted">إجمالي الحسابات</div><div class="num" id="accountsTotal">0</div></div>
+          <div class="stat"><div class="muted">الحسابات المعروضة</div><div class="num" id="accountsShown">0</div></div>
+        </div>
+        <div class="card">
+          <div class="notice">يمكنك البحث باسم الطالب أو اسم المستخدم، وتصفية القائمة حسب الصف. كلمات المرور لا تظهر في هذه الصفحة.</div>
+          <div class="filters">
+            <div class="field" style="margin:0">
+              <label for="studentAccountSearch">بحث عن طالب</label>
+              <input id="studentAccountSearch" placeholder="اسم الطالب أو اسم المستخدم" oninput="loadStudentsDebounced()">
+            </div>
+            <div class="field" style="margin:0">
+              <label for="studentAccountClass">الصف الدراسي</label>
+              <select id="studentAccountClass" onchange="loadStudents()"><option value="">كل الصفوف</option></select>
+            </div>
+            <div class="field" style="margin:0">
+              <label for="studentAccountLevel">مستوى الطالب</label>
+              <select id="studentAccountLevel" onchange="loadStudents()">
+                <option value="">كل المستويات</option>
+                <option value="excellent">ممتاز</option>
+                <option value="good">جيد</option>
+                <option value="follow">يحتاج متابعة</option>
+                <option value="support">يحتاج دعمًا</option>
+                <option value="none">لم يؤدِ امتحانًا</option>
+              </select>
+            </div>
+            <div class="field" style="margin:0">
+              <label for="studentAccountSort">ترتيب الطلاب</label>
+              <select id="studentAccountSort" onchange="loadStudents()">
+                <option value="average_desc">الأعلى متوسطًا أولًا</option>
+                <option value="results_desc">الأكثر أداءً (عدد النتائج)</option>
+                <option value="name_asc">الاسم أبجديًا</option>
+                <option value="activity_desc">الأحدث نشاطًا</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>#</th><th>اسم الطالب</th><th>اسم المستخدم</th><th>الصف</th><th>عدد النتائج</th><th>متوسط الدرجات</th><th>مؤشر المستوى</th><th>تاريخ التسجيل</th><th>آخر نشاط</th><th>الملف التفصيلي</th></tr></thead>
+              <tbody id="studentAccountsBody"><tr><td colspan="10">اضغط «تحديث القائمة» لتحميل الحسابات.</td></tr></tbody>
+            </table>
+          </div>
+          <div id="studentAccountsMessage" class="muted" style="margin-top:12px"></div>
+        </div>
+      </section>
+
+      <section id="page-results" class="hidden">
+        <div class="page-title">
+          <h2>نتائج الطلاب</h2>
+          <button class="btn btn-primary" onclick="loadResults()">تحديث النتائج</button>
+        </div>
+
+        
+<div class="results-stat-grid">
+  <div class="results-stat-card">
+    <span>عدد النتائج</span>
+    <strong id="resultsStatCount">0</strong>
+  </div>
+  <div class="results-stat-card">
+    <span>متوسط الدرجات</span>
+    <strong id="resultsStatAverage">0%</strong>
+  </div>
+  <div class="results-stat-card">
+    <span>نسبة النجاح</span>
+    <strong id="resultsStatPass">0%</strong>
+  </div>
+  <div class="results-stat-card">
+    <span>أعلى نتيجة</span>
+    <strong id="resultsStatHighest">0%</strong>
+  </div>
+  <div class="results-stat-card">
+    <span>أقل نتيجة</span>
+    <strong id="resultsStatLowest">0%</strong>
+  </div>
+</div>
+
+<div class="card">
+          <div class="notice">يمكنك البحث باسم الطالب أو كوده، ثم تحديد الصف والامتحان وترتيب النتائج.</div>
+          <div class="filters">
+            <div class="field" style="margin:0">
+              <label>بحث</label>
+              <input id="resultSearch" placeholder="اسم الطالب أو الكود" oninput="renderResults()">
+            </div>
+            <div class="field" style="margin:0">
+              <label>الصف</label>
+              <select id="resultClass" onchange="renderResults()"><option value="">كل الصفوف</option></select>
+            </div>
+            <div class="field" style="margin:0">
+              <label>الامتحان</label>
+              <select id="resultExam" onchange="renderResults()"><option value="">كل الامتحانات</option></select>
+            </div>
+            <div class="field" style="margin:0">
+              <label>الترتيب</label>
+              <select id="resultSort" onchange="renderResults()">
+                <option value="newest">الأحدث أولًا</option>
+                <option value="highest">أعلى درجة أولًا</option>
+                <option value="lowest">أقل درجة أولًا</option>
+                <option value="name">اسم الطالب</option>
+              </select>
+            </div>
+            <button class="btn btn-secondary" onclick="clearResultFilters()">مسح</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="results-info">
+            <strong id="resultsCount">0 نتيجة</strong>
+            <span class="muted" id="resultsAverage"></span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>الطالب</th>
+                  <th>الكود</th>
+                  <th>الصف</th>
+                  <th>الامتحان</th>
+                  <th>الصحيح</th>
+                  <th>الخطأ</th>
+                  <th>الدرجة</th>
+                  <th>النسبة</th>
+                  <th>التاريخ</th>
+            <th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="resultsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+
+<div id="certificatePrintArea" class="hidden"></div>
+
+<div id="modal" class="modal hidden" onclick="closeModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <h3 id="modalTitle">الأسئلة</h3>
+      <button class="close" onclick="hideModal()">×</button>
+    </div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+let classes = [];
+let exams = [];
+let allResults = [];
+let loggedIn = false;
+
+async function api(url, options={}) {
+  const response = await fetch(url, {
+    credentials: "same-origin",
+    headers: {"Content-Type":"application/json", ...(options.headers||{})},
+    ...options
+  });
+  let data = {};
+  try { data = await response.json(); } catch(e) {}
+  if (!response.ok) throw new Error(data.error || data.message || "حدث خطأ في الاتصال");
+  return data;
+}
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
+}
+
+function className(id) {
+  const c = classes.find(x => String(x.id) === String(id));
+  return c ? c.name : "غير محدد";
+}
+
+function examName(id) {
+  const e = exams.find(x => String(x.id) === String(id));
+  return e ? e.title : "غير محدد";
+}
+
+async function login() {
+  const password = document.getElementById("password").value.trim();
+  const box = document.getElementById("loginError");
+  box.innerHTML = "";
+  if (!password) {
+    box.innerHTML = '<div class="error">اكتب كلمة المرور أولًا.</div>';
+    return;
+  }
+  try {
+    await api("/api/admin/login", {
+      method:"POST",
+      body:JSON.stringify({password})
+    });
+    loggedIn = true;
+    document.getElementById("loginPage").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+    await init();
+  } catch(e) {
+    box.innerHTML = '<div class="error">' + esc(e.message) + '</div>';
+  }
+}
+
+async function logout() {
+  try { await api("/api/admin/logout",{method:"POST"}); } catch(e) {}
+  loggedIn = false;
+  location.reload();
+}
+
+async function init() {
+  await loadClasses();
+  await loadExams();
+  await loadResults();
+  updateStats();
+  // تحميل إحصائيات لوحة المدرس بعد نجاح التحقق من الجلسة.
+  await loadDashboardOverview();
+}
+
+async function loadClasses() {
+  const data = await api("/api/classes");
+  classes = Array.isArray(data) ? data : (data.classes || []);
+  const selects = ["examClass"];
+  for (const id of selects) {
+    const s = document.getElementById(id);
+    if (!s) continue;
+    s.innerHTML = classes.map(c => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join("");
+  }
+  const resultClass = document.getElementById("resultClass");
+  resultClass.innerHTML = '<option value="">كل الصفوف</option>' +
+    classes.map(c => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join("");
+  const studentClass = document.getElementById("studentAccountClass");
+  if (studentClass) {
+    const selectedClass = studentClass.value;
+    studentClass.innerHTML = '<option value="">كل الصفوف</option>' +
+      classes.map(c => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join("");
+    studentClass.value = selectedClass;
+  }
+  document.getElementById("statClasses").textContent = classes.length;
+}
+
+async function loadExams() {
+  const data = await api("/api/admin/exams");
+  exams = Array.isArray(data) ? data : (data.exams || []);
+  renderExams();
+  fillExamSelects();
+  updateStats();
+}
+
+function fillExamSelects() {
+  const q = document.getElementById("questionExam");
+  const current = q.value;
+  q.innerHTML = '<option value="">اختر الامتحان</option>' +
+    exams.map(e => `<option value="${esc(e.id)}">${esc(e.title)} — ${esc(className(e.class_id))}</option>`).join("");
+  if (exams.some(e => String(e.id) === String(current))) q.value = current;
+
+  const r = document.getElementById("resultExam");
+  const old = r.value;
+  r.innerHTML = '<option value="">كل الامتحانات</option>' +
+    exams.map(e => `<option value="${esc(e.id)}">${esc(e.title)}</option>`).join("");
+  if (exams.some(e => String(e.id) === String(old))) r.value = old;
+}
+
+function renderExams() {
+  const body = document.getElementById("examsBody");
+  if (!exams.length) {
+    body.innerHTML = '<tr><td colspan="6" class="empty">لا توجد امتحانات حتى الآن.</td></tr>';
+    return;
+  }
+  body.innerHTML = exams.map((e,i) => {
+    const published = Number(e.published) === 1;
+    return `<tr>
+      <td>${i+1}</td>
+      <td><strong>${esc(e.title)}</strong></td>
+      <td>${esc(className(e.class_id))}</td>
+      <td>${esc(e.duration)} دقيقة</td>
+      <td><span class="badge ${published?'badge-green':'badge-yellow'}">${published?'منشور':'غير منشور'}</span></td>
+      <td>
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="viewQuestions(${Number(e.id)})">الأسئلة</button>
+          <button class="btn ${published?'btn-warning':'btn-success'}" onclick="togglePublish(${Number(e.id)},${published})">${published?'إلغاء النشر':'نشر'}</button>
+          <button class="btn btn-danger" onclick="deleteExam(${Number(e.id)})">حذف</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+async function createExam() {
+  const title = document.getElementById("examTitle").value.trim();
+  const class_id = document.getElementById("examClass").value;
+  const duration = Number(document.getElementById("examDuration").value);
+  const published = Number(document.getElementById("examPublished").value);
+  const box = document.getElementById("examMessage");
+  box.innerHTML = "";
+
+  if (!title || !class_id || !duration) {
+    box.innerHTML = '<div class="error">أكمل بيانات الامتحان.</div>';
+    return;
+  }
+  try {
+    await api("/api/admin/exams", {
+      method:"POST",
+      body:JSON.stringify({title,class_id:Number(class_id),duration,published})
+    });
+    document.getElementById("examTitle").value = "";
+    document.getElementById("examDuration").value = "30";
+    box.innerHTML = '<div class="success">تم إنشاء الامتحان بنجاح.</div>';
+    await loadExams();
+  } catch(e) {
+    box.innerHTML = '<div class="error">'+esc(e.message)+'</div>';
+  }
+}
+
+async function togglePublish(id, published) {
+  try {
+    await api(`/api/admin/exams/${id}/publish`, {
+      method:"POST",
+      body:JSON.stringify({published: published ? 0 : 1})
+    });
+    await loadExams();
+  } catch(e) { alert(e.message); }
+}
+
+async function deleteExam(id) {
+  if (!confirm("هل أنت متأكد من حذف الامتحان وجميع أسئلته؟")) return;
+  try {
+    await api(`/api/admin/exams/${id}`,{method:"DELETE"});
+    await loadExams();
+    await loadResults();
+  } catch(e) { alert(e.message); }
+}
+
+async function addQuestion() {
+  const exam_id = document.getElementById("questionExam").value;
+  const question = document.getElementById("questionText").value.trim();
+  const option_a = document.getElementById("optionA").value.trim();
+  const option_b = document.getElementById("optionB").value.trim();
+  const option_c = document.getElementById("optionC").value.trim();
+  const option_d = document.getElementById("optionD").value.trim();
+  const correct_answer = document.getElementById("correctAnswer").value;
+  const box = document.getElementById("questionMessage");
+  box.innerHTML = "";
+
+  if (!exam_id || !question || !option_a || !option_b || !option_c || !option_d) {
+    box.innerHTML = '<div class="error">اختر الامتحان وأكمل السؤال وجميع الاختيارات.</div>';
+    return;
+  }
+
+  try {
+    await api("/api/admin/questions", {
+      method:"POST",
+      body:JSON.stringify({
+        exam_id:Number(exam_id), question, option_a, option_b, option_c, option_d, correct_answer
+      })
+    });
+    document.getElementById("questionText").value = "";
+    ["optionA","optionB","optionC","optionD"].forEach(id => document.getElementById(id).value="");
+    box.innerHTML = '<div class="success">تمت إضافة السؤال بنجاح.</div>';
+    await loadQuestions();
+  } catch(e) {
+    box.innerHTML = '<div class="error">'+esc(e.message)+'</div>';
+  }
+}
+
+async function loadQuestions() {
+  const id = document.getElementById("questionExam").value;
+  const list = document.getElementById("questionsList");
+  if (!id) {
+    list.innerHTML = '<div class="empty">اختر امتحانًا لعرض أسئلته.</div>';
+    return;
+  }
+  try {
+    const data = await api(`/api/admin/exams/${id}/questions`);
+    const qs = Array.isArray(data) ? data : (data.questions || []);
+    if (!qs.length) {
+      list.innerHTML = '<div class="empty">لا توجد أسئلة في هذا الامتحان.</div>';
+      return;
+    }
+    list.innerHTML = qs.map((q,i)=>`
+      <div class="question-item">
+        <div><strong>${i+1}) ${esc(q.question)}</strong></div>
+        <div class="option-line">أ) ${esc(q.option_a)}</div>
+        <div class="option-line">ب) ${esc(q.option_b)}</div>
+        <div class="option-line">ج) ${esc(q.option_c)}</div>
+        <div class="option-line">د) ${esc(q.option_d)}</div>
+        <div style="margin-top:10px"><span class="badge badge-green">الإجابة الصحيحة: ${esc(String(q.correct_answer).toUpperCase())}</span></div>
+        <div style="margin-top:10px"><button class="btn btn-danger" onclick="deleteQuestion(${Number(q.id)})">حذف السؤال</button></div>
+      </div>
+    `).join("");
+  } catch(e) {
+    list.innerHTML = '<div class="error">'+esc(e.message)+'</div>';
+  }
+}
+
+async function deleteQuestion(id) {
+  if (!confirm("هل تريد حذف هذا السؤال؟")) return;
+  try {
+    await api(`/api/admin/questions/${id}`,{method:"DELETE"});
+    await loadQuestions();
+  } catch(e) { alert(e.message); }
+}
+
+async function viewQuestions(id) {
+  document.getElementById("questionExam").value = String(id);
+  await loadQuestions();
+  showPage("questions");
+}
+
+async function loadResults() {
+  try {
+    const data = await api("/api/admin/results");
+    allResults = Array.isArray(data) ? data : (data.results || []);
+    renderResults();
+    updateStats();
+  } catch(e) {
+    document.getElementById("resultsBody").innerHTML =
+      `<tr><td colspan="11" class="empty">${esc(e.message)}</td></tr>`;
+  }
+}
+
+function normalizedPercentage(r) {
+  const n = Number(r.percentage);
+  if (Number.isFinite(n)) return n;
+  const total = Number(r.total);
+  const correct = Number(r.correct);
+  return total ? (correct / total) * 100 : 0;
+}
+
+// Format a score percentage consistently across the dashboard and results tables.
+function formatPercent(value) {
+  const n = Number(value);
+  return (Number.isFinite(n) ? n : 0).toLocaleString('ar-EG', {
+    maximumFractionDigits: 1,
+    minimumFractionDigits: 0
+  }) + '%';
+}
+
+
+function updateResultsStatistics(rows) {
+  const list = Array.isArray(rows) ? rows : [];
+
+  const percentages = list.map(normalizedPercentage).filter(Number.isFinite);
+  const count = list.length;
+  const average = count
+    ? percentages.reduce((sum, value) => sum + value, 0) / count
+    : 0;
+
+  const passed = list.filter(r => normalizedPercentage(r) >= 50).length;
+  const passRate = count ? (passed / count) * 100 : 0;
+  const highest = count ? Math.max(...percentages) : 0;
+  const lowest = count ? Math.min(...percentages) : 0;
+
+  const setText = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
+
+  setText("resultsStatCount", count);
+  setText("resultsStatAverage", `${average.toFixed(1)}%`);
+  setText("resultsStatPass", `${passRate.toFixed(1)}%`);
+  setText("resultsStatHighest", `${highest.toFixed(1)}%`);
+  setText("resultsStatLowest", `${lowest.toFixed(1)}%`);
+}
+
+function renderResults() {
+  const search = document.getElementById("resultSearch").value.trim().toLowerCase();
+  const classId = document.getElementById("resultClass").value;
+  const examId = document.getElementById("resultExam").value;
+  const sort = document.getElementById("resultSort").value;
+
+  let rows = allResults.filter(r => {
+    const name = String(r.student_name ?? "").toLowerCase();
+    const code = String(r.student_code ?? "").toLowerCase();
+    const matchesSearch = !search || name.includes(search) || code.includes(search);
+    const matchesClass = !classId || String(r.class_id) === String(classId);
+    const matchesExam = !examId || String(r.exam_id) === String(examId);
+    return matchesSearch && matchesClass && matchesExam;
+  });
+
+  rows.sort((a,b) => {
+    if (sort === "highest") return normalizedPercentage(b) - normalizedPercentage(a);
+    if (sort === "lowest") return normalizedPercentage(a) - normalizedPercentage(b);
+    if (sort === "name") return String(a.student_name||"").localeCompare(String(b.student_name||""),"ar");
+    return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+  });
+
+  updateResultsStatistics(rows);
+
+  document.getElementById("resultsCount").textContent = `${rows.length} نتيجة`;
+
+  const avg = rows.length ? rows.reduce((sum,r)=>sum+normalizedPercentage(r),0)/rows.length : 0;
+  document.getElementById("resultsAverage").textContent =
+    rows.length ? `متوسط النتائج: ${avg.toFixed(1)}%` : "";
+
+  const body = document.getElementById("resultsBody");
+  if (!rows.length) {
+    updateResultsStatistics([]);
+    body.innerHTML = '<tr><td colspan="11" class="empty">لا توجد نتائج مطابقة للبحث.</td></tr>';
+    return;
+  }
+
+  body.innerHTML = rows.map((r,i)=>{
+    const p = normalizedPercentage(r);
+    const gradeClass = p >= 85 ? "badge-green" : p >= 50 ? "badge-yellow" : "badge-red";
+    const total = Number(r.total ?? 0);
+    const correct = Number(r.correct ?? 0);
+    const wrong = Number(r.wrong ?? Math.max(0,total-correct));
+    return `<tr>
+      <td>${i+1}</td>
+      <td><strong>${esc(r.student_name)}</strong></td>
+      <td>${esc(r.student_code)}</td>
+      <td>${esc(className(r.class_id))}</td>
+      <td>${esc(examName(r.exam_id))}</td>
+      <td>${correct}</td>
+      <td>${wrong}</td>
+      <td>${correct} / ${total}</td>
+      <td><span class="badge ${gradeClass}">${p.toFixed(1)}%</span></td>
+      <td>${formatDate(r.created_at)}</td>
+            <td>
+              <button class="btn btn-secondary" onclick="showResultDetails(${Number(r.id)})">تفاصيل</button>
+              <button class="btn btn-primary" onclick="editResult(${Number(r.id)})">تعديل</button>
+              <button class="btn btn-danger" onclick="deleteResult(${Number(r.id)})">حذف</button>
+            </td>
+    </tr>`;
+  }).join("");
+}
+
+function clearResultFilters() {
+  document.getElementById("resultSearch").value = "";
+  document.getElementById("resultClass").value = "";
+  document.getElementById("resultExam").value = "";
+  document.getElementById("resultSort").value = "newest";
+  renderResults();
+}
+
+function formatDate(value) {
+  if (!value) return "-";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return esc(value);
+  return d.toLocaleString("ar-EG");
+}
+
+function updateStats() {
+  document.getElementById("statExams").textContent = exams.length;
+  document.getElementById("statPublished").textContent = exams.filter(e=>Number(e.published)===1).length;
+  document.getElementById("statResults").textContent = allResults.length;
+}
+
+function showPage(page) {
+  ["dashboard","exams","questions","results","students"].forEach(p=>{
+    document.getElementById("page-"+p).classList.toggle("hidden",p!==page);
+  });
+  // هذه الأقسام جزء من الرئيسية فقط، ولا تظهر أثناء إدارة الامتحانات أو النتائج.
+  ["dashboardOverview","dashboardAnalytics","dashboardCharts","dashboardRecentSection"].forEach(id=>{
+    const section = document.getElementById(id);
+    if (section) section.classList.toggle("hidden", page !== "dashboard");
+  });
+  document.querySelectorAll(".nav-btn").forEach(b=>{
+    b.classList.toggle("active",b.dataset.page===page);
+  });
+  if (page === "dashboard") {
+    // Wait for the dashboard panels to become visible before measuring canvas sizes.
+    requestAnimationFrame(() => renderDashboardCharts(dashboardChartResults));
+  }
+  if (page === "results") renderResults();
+  if (page === "questions") loadQuestions();
+  if (page === "students") loadStudents();
+}
+
+let studentSearchTimer = null;
+let studentLoadToken = 0;
+
+async function exportStudentsCsv() {
+  try {
+    const response = await fetch("/api/admin/export/students.csv", { credentials: "same-origin" });
+    if (!response.ok) {
+      let message = "تعذر تنزيل الكشف";
+      try { const data = await response.json(); message = data.error || message; } catch (_) {}
+      throw new Error(message);
+    }
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "bariq_nour_students_grades.csv";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    alert(error.message || "حدث خطأ أثناء تنزيل كشف الطلاب والدرجات.");
+  }
+}
+
+function studentLevelBadge(student) {
+  const count = Number(student?.result_count || 0);
+  if (!count) return '<span class="student-level-badge student-level-none">لم يؤدِ امتحانًا</span>';
+  const average = Number(student?.average_percentage || 0);
+  if (average >= 85) return '<span class="student-level-badge student-level-excellent">ممتاز</span>';
+  if (average >= 70) return '<span class="student-level-badge student-level-good">جيد</span>';
+  if (average >= 50) return '<span class="student-level-badge student-level-follow">يحتاج متابعة</span>';
+  return '<span class="student-level-badge student-level-support">يحتاج دعمًا</span>';
+}
+
+function loadStudentsDebounced() {
+  if (studentSearchTimer) clearTimeout(studentSearchTimer);
+  studentSearchTimer = setTimeout(loadStudents, 250);
+}
+
+async function loadStudents() {
+  const body = document.getElementById("studentAccountsBody");
+  const message = document.getElementById("studentAccountsMessage");
+  if (!body) return;
+  const token = ++studentLoadToken;
+  body.innerHTML = '<tr><td colspan="10">جاري تحميل حسابات الطلاب...</td></tr>';
+  if (message) message.textContent = "";
+  const params = new URLSearchParams();
+  const search = document.getElementById("studentAccountSearch")?.value?.trim() || "";
+  const classId = document.getElementById("studentAccountClass")?.value || "";
+  if (search) params.set("search", search);
+  if (classId) params.set("class_id", classId);
+  try {
+    const data = await api("/api/admin/students" + (params.toString() ? "?" + params.toString() : ""));
+    if (token !== studentLoadToken) return;
+    let students = Array.isArray(data.students) ? [...data.students] : [];
+    const levelFilter = document.getElementById("studentAccountLevel")?.value || "";
+    const levelOf = student => {
+      if (!Number(student?.result_count || 0)) return "none";
+      const average = Number(student?.average_percentage || 0);
+      if (average >= 85) return "excellent";
+      if (average >= 70) return "good";
+      if (average >= 50) return "follow";
+      return "support";
+    };
+    if (levelFilter) students = students.filter(student => levelOf(student) === levelFilter);
+    const sortMode = document.getElementById("studentAccountSort")?.value || "average_desc";
+    const num = value => Number(value || 0);
+    students.sort((a, b) => {
+      if (sortMode === "results_desc") return num(b.result_count) - num(a.result_count) || num(b.average_percentage) - num(a.average_percentage);
+      if (sortMode === "name_asc") return String(a.full_name || a.username || "").localeCompare(String(b.full_name || b.username || ""), "ar");
+      if (sortMode === "activity_desc") return String(b.last_activity || "").localeCompare(String(a.last_activity || ""));
+      return num(b.average_percentage) - num(a.average_percentage) || num(b.result_count) - num(a.result_count);
+    });
+    document.getElementById("accountsTotal").textContent = Number(data.total_accounts || 0);
+    document.getElementById("accountsShown").textContent = students.length;
+    if (!students.length) {
+      body.innerHTML = '<tr><td colspan="10">لا توجد حسابات مطابقة للبحث.</td></tr>';
+      if (message) message.textContent = "أنشئ حسابًا تجريبيًا من صفحة تسجيل الطلاب للتأكد من ظهوره هنا.";
+      return;
+    }
+    body.innerHTML = students.map((student, index) => `
+      <tr>
+        <td>${index + 1}</td>
+        <td><strong>${esc(student.full_name || "—")}</strong></td>
+        <td>${esc(student.username || "—")}</td>
+        <td>${esc(student.class_name || "غير محدد")}</td>
+        <td>${Number(student.result_count || 0)}</td>
+        <td>${Number(student.average_percentage || 0).toFixed(1)}%</td>
+        <td>${studentLevelBadge(student)}</td>
+        <td>${formatDate(student.created_at)}</td>
+        <td>${formatDate(student.last_activity)}</td>
+        <td><button class="btn btn-primary" onclick="openStudentProfile(${Number(student.id)})">عرض الملف</button></td>
+      </tr>`).join("");
+    if (message) message.textContent = `تم تحميل ${students.length} حساب.`;
+  } catch (error) {
+    if (token !== studentLoadToken) return;
+    body.innerHTML = `<tr><td colspan="10">${esc(error.message || "تعذر تحميل حسابات الطلاب")}</td></tr>`;
+    if (message) message.textContent = "تأكد أن ملف app.py المحدث يعمل وأنك مسجل الدخول إلى لوحة المدرس.";
+  }
+}
+
+
+function drawStudentHistoryChart(results) {
+  const canvas = document.getElementById("studentHistoryChart");
+  if (!canvas) return;
+  const rect = canvas.getBoundingClientRect();
+  const w = Math.max(280, Math.floor(rect.width || 500));
+  const h = 220;
+  const ratio = Math.max(1, window.devicePixelRatio || 1);
+  canvas.width = Math.round(w * ratio);
+  canvas.height = Math.round(h * ratio);
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  const rows = (Array.isArray(results) ? results : []).map((r, i) => ({
+    value: Math.max(0, Math.min(100, Number(r.percentage ?? (Number(r.total) ? Number(r.correct) / Number(r.total) * 100 : 0)) || 0)),
+    date: String(r.created_at || ""), index: i
+  })).sort((a, b) => (Date.parse(a.date) || 0) - (Date.parse(b.date) || 0));
+  if (!rows.length) {
+    chartText(ctx, "لا توجد نتائج لرسمها", w / 2, h / 2, {font: "14px Arial"});
+    return;
+  }
+  const left = 36, right = 18, top = 18, bottom = 40;
+  const pw = w - left - right, ph = h - top - bottom;
+  [0, 25, 50, 75, 100].forEach(v => {
+    const y = top + ph - ph * v / 100;
+    ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(w - right, y);
+    ctx.strokeStyle = "#e9edf3"; ctx.lineWidth = 1; ctx.stroke();
+    chartText(ctx, v + "%", left - 7, y, {align: "right", font: "10px Arial"});
+  });
+  const points = rows.map((r, i) => ({
+    x: rows.length === 1 ? left + pw / 2 : left + i * pw / (rows.length - 1),
+    y: top + ph - ph * r.value / 100,
+    value: r.value,
+    label: r.date ? r.date.slice(0, 10) : String(i + 1)
+  }));
+  ctx.beginPath(); points.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y));
+  ctx.strokeStyle = "#17365d"; ctx.lineWidth = 2.5; ctx.stroke();
+  points.forEach((p, i) => {
+    ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI * 2); ctx.fillStyle = "#c89b3c"; ctx.fill();
+    chartText(ctx, Math.round(p.value) + "%", p.x, Math.max(10, p.y - 13), {font: "bold 10px Arial", color: "#17365d"});
+    if (i === 0 || i === points.length - 1 || points.length <= 5) {
+      chartText(ctx, p.label, p.x, h - 17, {font: "10px Arial"});
+    }
+  });
+}
+
+async function openStudentProfile(studentId) {
+  const modal = document.getElementById("modal");
+  const title = document.getElementById("modalTitle");
+  const content = document.getElementById("modalContent");
+  if (!modal || !content || !title) return;
+  title.textContent = "الملف التفصيلي للطالب";
+  content.innerHTML = '<div class="empty">جاري تحميل بيانات الطالب وسجل امتحاناته...</div>';
+  modal.classList.remove("hidden");
+  try {
+    const data = await api(`/api/admin/students/${encodeURIComponent(studentId)}`);
+    const student = data.student || {};
+    const results = Array.isArray(data.results) ? data.results : [];
+    const average = Number(student.average_percentage || 0);
+    const resultRows = results.length ? results.map((r, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${esc(r.exam_title || "امتحان غير معروف")}</td>
+        <td>${Number(r.correct || 0)} / ${Number(r.total || 0)}</td>
+        <td>${Number(r.wrong || 0)}</td>
+        <td><strong>${Number(r.percentage || 0).toFixed(1)}%</strong></td>
+        <td>${formatDate(r.created_at)}</td>
+      </tr>`).join("") : '<tr><td colspan="6" class="empty">لا توجد نتائج مرتبطة بهذا الحساب حتى الآن.</td></tr>';
+
+    content.innerHTML = `
+      <div class="stats" style="grid-template-columns:repeat(auto-fit,minmax(145px,1fr));margin-bottom:16px">
+        <div class="stat"><div class="muted">عدد النتائج</div><div class="num">${Number(student.result_count || 0)}</div></div>
+        <div class="stat"><div class="muted">متوسط الدرجات</div><div class="num">${average.toFixed(1)}%</div></div>
+        <div class="stat"><div class="muted">آخر نشاط</div><div style="margin-top:8px;font-weight:bold">${formatDate(student.last_activity)}</div></div>
+      </div>
+      <div class="card" style="box-shadow:none;margin-bottom:16px">
+        <h3>بيانات الطالب</h3>
+        <div class="grid2">
+          <div><span class="muted">الاسم الكامل</span><p><strong>${esc(student.full_name || "—")}</strong></p></div>
+          <div><span class="muted">اسم المستخدم</span><p><strong>${esc(student.username || "—")}</strong></p></div>
+          <div><span class="muted">الصف الدراسي</span><p><strong>${esc(student.class_name || "غير محدد")}</strong></p></div>
+          <div><span class="muted">تاريخ إنشاء الحساب</span><p><strong>${formatDate(student.created_at)}</strong></p></div>
+        </div>
+        <div class="notice">للحفاظ على أمان الحساب، لا يتم عرض كلمة المرور.</div>
+      </div>
+      <div class="card" style="box-shadow:none;margin-bottom:16px">
+        <h3>تطور مستوى الطالب</h3>
+        <p class="muted">النسبة المئوية لكل محاولة، مرتبة من الأقدم إلى الأحدث.</p>
+        <div style="height:220px;min-width:0"><canvas id="studentHistoryChart" role="img" aria-label="رسم بياني لتطور درجات الطالب" style="width:100%;height:220px;display:block"></canvas></div>
+      </div>
+      <div class="card" style="box-shadow:none">
+        <h3>سجل الامتحانات والدرجات</h3>
+        <div class="table-wrap"><table style="min-width:650px">
+          <thead><tr><th>#</th><th>الامتحان</th><th>الصحيح / الإجمالي</th><th>الإجابات الخاطئة</th><th>النسبة</th><th>تاريخ الامتحان</th></tr></thead>
+          <tbody>${resultRows}</tbody>
+        </table></div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="printStudentProfile(${Number(studentId)})">طباعة تقرير الطالب</button>
+        <button class="btn btn-secondary" onclick="hideModal()">إغلاق الملف</button>
+      </div>
+    `;
+    window.currentStudentPrintData = { student, results };
+    requestAnimationFrame(() => drawStudentHistoryChart(results));
+  } catch (error) {
+    content.innerHTML = `<div class="error">${esc(error.message || "تعذر تحميل ملف الطالب")}</div>`;
+  }
+}
+
+function printStudentProfile(studentId) {
+  const data = window.currentStudentPrintData;
+  if (!data || !data.student) {
+    alert("افتح ملف الطالب مرة أخرى ثم جرّب الطباعة.");
+    return;
+  }
+  const student = data.student;
+  const results = Array.isArray(data.results) ? data.results : [];
+  const safe = value => String(value ?? "—").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  const rows = results.map((r, i) => `<tr><td>${i + 1}</td><td>${safe(r.exam_title || "امتحان غير معروف")}</td><td>${Number(r.correct || 0)} / ${Number(r.total || 0)}</td><td>${Number(r.wrong || 0)}</td><td>${Number(r.percentage || 0).toFixed(1)}%</td><td>${safe(r.created_at || "—")}</td></tr>`).join("");
+  const report = `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>تقرير الطالب - ${safe(student.full_name || student.username)}</title><style>body{font-family:Tahoma,Arial,sans-serif;color:#172b4d;margin:28px;line-height:1.7}h1,h2{color:#17365d}header{border-bottom:3px solid #c89b3c;padding-bottom:12px;margin-bottom:20px}.info{display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#f5f7fa;padding:14px;border-radius:8px}.stats{display:flex;gap:12px;margin:16px 0}.stat{border:1px solid #dce3eb;padding:12px;flex:1;border-radius:8px}.num{font-size:22px;font-weight:bold}table{width:100%;border-collapse:collapse;margin-top:12px;font-size:12px}th,td{border:1px solid #d7dee8;padding:8px;text-align:right}th{background:#eef2f7}.note{margin-top:24px;color:#667085;font-size:12px}@media print{body{margin:10mm}.no-print{display:none}}</style></head><body><header><h1>بريق نور للأستاذ أنور أبو ستيت</h1><div>تقرير أداء الطالب</div></header><div class="info"><div><b>اسم الطالب:</b> ${safe(student.full_name || "—")}</div><div><b>اسم المستخدم:</b> ${safe(student.username || "—")}</div><div><b>الصف الدراسي:</b> ${safe(student.class_name || "غير محدد")}</div><div><b>تاريخ إنشاء الحساب:</b> ${safe(student.created_at || "—")}</div></div><div class="stats"><div class="stat">عدد النتائج<div class="num">${Number(student.result_count || results.length)}</div></div><div class="stat">متوسط الدرجات<div class="num">${Number(student.average_percentage || 0).toFixed(1)}%</div></div><div class="stat">عدد الامتحانات المسجلة<div class="num">${results.length}</div></div></div><h2>سجل الامتحانات والدرجات</h2><table><thead><tr><th>#</th><th>الامتحان</th><th>الصحيح / الإجمالي</th><th>الأخطاء</th><th>النسبة</th><th>التاريخ</th></tr></thead><tbody>${rows || '<tr><td colspan="6">لا توجد نتائج مسجلة</td></tr>'}</tbody></table><div class="note">تم إنشاء هذا التقرير من النتائج المسجلة في الموقع. لا يتضمن كلمات المرور أو بيانات الدخول.</div><div class="no-print"><button onclick="window.print()">طباعة التقرير</button></div><script>window.addEventListener('load',()=>setTimeout(()=>window.print(),250));<\/script></body></html>`;
+  const win = window.open("", "_blank");
+  if (!win) {
+    alert("المتصفح منع نافذة التقرير. اسمح بالنوافذ المنبثقة لهذا الموقع ثم أعد المحاولة.");
+    return;
+  }
+  win.document.open();
+  win.document.write(report);
+  win.document.close();
+}
+
+function openStudentSite() {
+  window.open("/", "_blank");
+}
+
+
+
+
+function getCertificateGrade(percentage) {
+  const p = Number(percentage) || 0;
+  if (p >= 90) return "ممتاز";
+  if (p >= 80) return "جيد جدًا";
+  if (p >= 65) return "جيد";
+  if (p >= 50) return "مقبول";
+  return "يحتاج إلى مراجعة";
+}
+
+function getCertificateMessage(percentage) {
+  const p = Number(percentage) || 0;
+  if (p >= 90) return "تهانينا على هذا الأداء المتميز، مع تمنياتنا لك بمزيد من النجاح والتفوق.";
+  if (p >= 80) return "أداء رائع، استمر في المراجعة والتدريب للوصول إلى أعلى الدرجات.";
+  if (p >= 65) return "أداء جيد، ومع المزيد من المراجعة يمكنك تحقيق نتيجة أفضل.";
+  if (p >= 50) return "نتيجة جيدة، ونشجعك على مراجعة الدروس والاستعداد بشكل أفضل للامتحان القادم.";
+  return "نوصي بمراجعة الدروس وإعادة التدريب على الأسئلة لتحقيق نتيجة أفضل في المحاولات القادمة.";
+}
+
+
+function makeCertificateNumber(result) {
+  const id = Number(result && result.id ? result.id : 0);
+  const year = new Date().getFullYear();
+  return `AN-${year}-${String(id).padStart(6, "0")}`;
+}
+
+function certificateDate(value) {
+  if (!value) return new Date().toLocaleDateString("ar-EG");
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return esc(value);
+  return d.toLocaleDateString("ar-EG", {
+    year:"numeric",
+    month:"long",
+    day:"numeric"
+  });
+}
+
+async function printStudentCertificate(resultId) {
+  try {
+    const response = await fetch(`/api/admin/results/${encodeURIComponent(resultId)}`);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "تعذر تحميل بيانات الشهادة.");
+    }
+
+    const r = data.result || {};
+    const correct = Number(r.correct || 0);
+    const wrong = Number(r.wrong || 0);
+    const total = Number(r.total || (correct + wrong));
+    const percentage = normalizedPercentage(r);
+    const grade = getCertificateGrade(percentage);
+    const message = getCertificateMessage(percentage);
+    const certificateNumber = makeCertificateNumber(r);
+
+    const printArea = document.getElementById("certificatePrintArea");
+
+    printArea.innerHTML = `
+      <div class="certificate-sheet">
+        <div class="certificate-inner">
+          <div class="certificate-brand">أستاذ أنور أبو ستيت</div>
+          <div class="certificate-subtitle">الدراسات الاجتماعية</div>
+
+          <div class="certificate-number">
+  <span>رقم الشهادة:</span>
+  <strong id="certificateNumber">${certificateNumber}</strong>
+</div>
+
+<div class="certificate-title">شهادة نتيجة طالب</div>
+
+<div class="certificate-intro">
+  تشهد منصة أستاذ أنور أبو ستيت بنتيجة الطالب في اختبار الدراسات الاجتماعية الموضح أدناه
+</div>
+
+          <div class="certificate-student">
+            <div class="certificate-student-name">
+              ${escapeHtml(r.student_name || "الطالب")}
+            </div>
+
+            <div class="certificate-meta">
+              <div class="certificate-meta-item">
+                <div class="certificate-meta-label">كود الطالب</div>
+                <div class="certificate-meta-value">${escapeHtml(r.student_code || "—")}</div>
+              </div>
+
+              <div class="certificate-meta-item">
+                <div class="certificate-meta-label">الصف</div>
+                <div class="certificate-meta-value">
+                  ${escapeHtml(r.class_name || className(r.class_id))}
+                </div>
+              </div>
+
+              <div class="certificate-meta-item" style="grid-column:1/-1">
+                <div class="certificate-meta-label">الامتحان</div>
+                <div class="certificate-meta-value">
+                  ${escapeHtml(r.exam_title || examName(r.exam_id))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="certificate-score">
+            <div class="certificate-score-box">
+              <div class="certificate-score-label">الدرجة</div>
+              <div class="certificate-score-value">${correct} / ${total}</div>
+            </div>
+
+            <div class="certificate-score-box">
+              <div class="certificate-score-label">النسبة</div>
+              <div class="certificate-score-value">${percentage.toFixed(1)}%</div>
+            </div>
+
+            <div class="certificate-score-box">
+              <div class="certificate-score-label">التقدير</div>
+              <div class="certificate-score-value">${grade}</div>
+            </div>
+          </div>
+
+          <div class="certificate-grade">${grade}</div>
+
+          <div class="certificate-message">${message}</div>
+
+          <div class="certificate-seal">
+            نتيجة<br>معتمدة
+          </div>
+
+          <div class="certificate-footer">
+            <div class="certificate-sign">
+              توقيع المدرس
+            </div>
+            <div class="certificate-sign">
+              أستاذ أنور أبو ستيت
+            </div>
+          </div>
+
+          <div class="certificate-date">
+            تاريخ النتيجة: ${certificateDate(r.created_at)}
+          </div>
+        </div>
+      </div>
+    `;
+
+    printArea.classList.remove("hidden");
+
+    // ننتظر تحميل الخطوط/الرسم قبل فتح الطباعة.
+    setTimeout(() => {
+      window.print();
+    }, 250);
+
+  } catch (error) {
+    console.error(error);
+    alert(error.message || "حدث خطأ أثناء تجهيز الشهادة.");
+  }
+}
+
+
+async function printDetailedResult(resultId) {
+  try {
+    const response = await fetch(`/api/admin/results/${encodeURIComponent(resultId)}`);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "تعذر تحميل التقرير.");
+    }
+
+    const r = data.result || {};
+    const answers = Array.isArray(data.answers) ? data.answers : [];
+    const correct = Number(r.correct || 0);
+    const wrong = Number(r.wrong || 0);
+    const total = Number(r.total || (correct + wrong));
+    const percentage = normalizedPercentage(r);
+
+    const letterText = { a: "أ", b: "ب", c: "ج", d: "د" };
+    const answerLabel = value => {
+      const key = String(value || "").toLowerCase();
+      return key ? (letterText[key] || key.toUpperCase()) : "لم يجب";
+    };
+
+    const rows = answers.length
+      ? answers.map((item, index) => `
+          <div class="detail-print-question">
+            <div class="detail-print-head">
+              <strong>السؤال ${index + 1}</strong>
+              <span class="${item.is_correct ? "detail-ok" : "detail-bad"}">
+                ${item.is_correct ? "صحيح" : "خطأ"}
+              </span>
+            </div>
+            <div class="detail-print-text">${escapeHtml(item.question || "")}</div>
+            <div class="detail-print-answers">
+              <span>إجابة الطالب: <b>${escapeHtml(answerLabel(item.student_answer))}</b></span>
+              <span>الإجابة الصحيحة: <b>${escapeHtml(answerLabel(item.correct_answer))}</b></span>
+            </div>
+          </div>
+        `).join("")
+      : `<div class="detail-print-empty">لا توجد تفاصيل محفوظة لإجابات هذا الاختبار.</div>`;
+
+    const area = document.getElementById("certificatePrintArea");
+    area.innerHTML = `
+      <div class="detail-print-sheet">
+        <div class="detail-print-inner">
+          <div class="detail-print-brand">أستاذ أنور أبو ستيت</div>
+          <div class="detail-print-subtitle">الدراسات الاجتماعية — تقرير نتيجة الطالب</div>
+          <div class="detail-print-title">التقرير التفصيلي</div>
+
+          <div class="detail-print-info">
+            <div><b>الطالب:</b> ${escapeHtml(r.student_name || "—")}</div>
+            <div><b>الكود:</b> ${escapeHtml(r.student_code || "—")}</div>
+            <div><b>الصف:</b> ${escapeHtml(r.class_name || className(r.class_id))}</div>
+            <div><b>الامتحان:</b> ${escapeHtml(r.exam_title || examName(r.exam_id))}</div>
+          </div>
+
+          <div class="detail-print-summary">
+            <div><b>${correct}</b><span>صحيح</span></div>
+            <div><b>${wrong}</b><span>خطأ</span></div>
+            <div><b>${total}</b><span>إجمالي</span></div>
+            <div><b>${percentage.toFixed(1)}%</b><span>النسبة</span></div>
+          </div>
+
+          <div class="detail-print-list">${rows}</div>
+
+          <div class="detail-print-footer">
+            رقم الشهادة: ${makeCertificateNumber(r)} — تاريخ النتيجة: ${certificateDate(r.created_at)}
+          </div>
+        </div>
+      </div>
+    `;
+
+    area.classList.remove("hidden");
+    setTimeout(() => window.print(), 250);
+  } catch (error) {
+    console.error(error);
+    alert(error.message || "حدث خطأ أثناء تجهيز التقرير.");
+  }
+}
+
+window.addEventListener("afterprint", () => {
+  const area = document.getElementById("certificatePrintArea");
+  if (area) {
+    area.classList.add("hidden");
+  }
+});
+
+async function editResult(resultId) {
+  const result = allResults.find(item => String(item.id) === String(resultId));
+
+  if (!result) {
+    alert("لم يتم العثور على نتيجة الطالب.");
+    return;
+  }
+
+  const correct = Number(result.correct || 0);
+  const wrong = Number(result.wrong || 0);
+  const total = Number(result.total || (correct + wrong));
+
+  document.getElementById("modalTitle").textContent = "تعديل نتيجة الطالب";
+
+  document.getElementById("modalContent").innerHTML = `
+    <div class="result-edit-form">
+      <div class="form-group">
+        <label>اسم الطالب</label>
+        <input id="editResultStudentName" type="text"
+               value="${escapeHtml(result.student_name || "")}">
+      </div>
+
+      <div class="form-group">
+        <label>كود الطالب</label>
+        <input id="editResultStudentCode" type="text"
+               value="${escapeHtml(result.student_code || "")}">
+      </div>
+
+      <div class="grid2">
+        <div class="form-group">
+          <label>الإجابات الصحيحة</label>
+          <input id="editResultCorrect" type="number" min="0"
+                 value="${correct}">
+        </div>
+
+        <div class="form-group">
+          <label>الإجابات الخاطئة</label>
+          <input id="editResultWrong" type="number" min="0"
+                 value="${wrong}">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>إجمالي الأسئلة</label>
+        <input id="editResultTotal" type="number" min="0"
+               value="${total}">
+      </div>
+
+      <div class="notice">
+        النسبة المئوية سيتم حسابها تلقائيًا من الصحيح ÷ الإجمالي.
+      </div>
+
+      <div class="result-edit-actions">
+        <button class="btn btn-primary" onclick="saveResultEdit(${Number(result.id)})">
+          حفظ التعديل
+        </button>
+        <button class="btn btn-secondary" onclick="hideModal()">
+          إلغاء
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("modal").classList.remove("hidden");
+}
+
+async function saveResultEdit(resultId) {
+  const studentName = document.getElementById("editResultStudentName").value.trim();
+  const studentCode = document.getElementById("editResultStudentCode").value.trim();
+  const correct = Number(document.getElementById("editResultCorrect").value);
+  const wrong = Number(document.getElementById("editResultWrong").value);
+  const total = Number(document.getElementById("editResultTotal").value);
+
+  if (!studentName || !studentCode) {
+    alert("اكتب اسم الطالب وكود الطالب.");
+    return;
+  }
+
+  if (!Number.isInteger(correct) || !Number.isInteger(wrong) || !Number.isInteger(total)) {
+    alert("اكتب الدرجات كأرقام صحيحة.");
+    return;
+  }
+
+  if (correct < 0 || wrong < 0 || total < 0) {
+    alert("الدرجات لا يمكن أن تكون سالبة.");
+    return;
+  }
+
+  if (correct + wrong !== total) {
+    alert("مجموع الصحيح والخطأ يجب أن يساوي إجمالي الأسئلة.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/admin/results/${encodeURIComponent(resultId)}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        student_name: studentName,
+        student_code: studentCode,
+        correct: correct,
+        wrong: wrong,
+        total: total
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "تعذر تعديل النتيجة.");
+    }
+
+    alert("تم تعديل النتيجة بنجاح.");
+    hideModal();
+    await loadResults();
+  } catch (error) {
+    console.error(error);
+    alert(error.message || "حدث خطأ أثناء تعديل النتيجة.");
+  }
+}
+
+async function deleteResult(resultId) {
+  const result = allResults.find(item => String(item.id) === String(resultId));
+
+  if (!result) {
+    alert("لم يتم العثور على نتيجة الطالب.");
+    return;
+  }
+
+  const studentName = result.student_name || "هذا الطالب";
+
+  const confirmed = confirm(
+    `هل أنت متأكد من حذف نتيجة ${studentName}؟\n\nسيتم حذف النتيجة وتفاصيل إجاباتها نهائيًا.`
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/admin/results/${encodeURIComponent(resultId)}`, {
+      method: "DELETE"
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "تعذر حذف النتيجة.");
+    }
+
+    alert("تم حذف النتيجة بنجاح.");
+    await loadResults();
+  } catch (error) {
+    console.error(error);
+    alert(error.message || "حدث خطأ أثناء حذف النتيجة.");
+  }
+}
+
+async function showResultDetails(resultId) {
+  const result = allResults.find(item => String(item.id) === String(resultId));
+
+  if (!result) {
+    alert("لم يتم العثور على نتيجة الطالب.");
+    return;
+  }
+
+  document.getElementById("modalTitle").textContent = "تفاصيل نتيجة الطالب";
+  document.getElementById("modalContent").innerHTML = `
+    <div class="notice">جاري تحميل تفاصيل الإجابات...</div>
+  `;
+  document.getElementById("modal").classList.remove("hidden");
+
+  try {
+    const response = await fetch(`/api/admin/results/${encodeURIComponent(resultId)}`);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "تعذر تحميل تفاصيل النتيجة.");
+    }
+
+    const r = data.result || result;
+    const answers = Array.isArray(data.answers) ? data.answers : [];
+    const percentage = normalizedPercentage(r);
+    const correct = Number(r.correct || 0);
+    const wrong = Number(r.wrong || 0);
+    const total = Number(r.total || (correct + wrong));
+
+    const letterText = {
+      a: "أ",
+      b: "ب",
+      c: "ج",
+      d: "د"
+    };
+
+    const answerLabel = (value) => {
+      const key = String(value || "").toLowerCase();
+      return key ? `${letterText[key] || key.toUpperCase()}` : "لم يجب";
+    };
+
+    const detailPrintButton = `
+      <div class="certificate-print-actions">
+        <button class="btn btn-success" onclick="printDetailedResult(${Number(resultId)})">
+          🖨️ طباعة التقرير التفصيلي
+        </button>
+      </div>
+    `;
+
+    const questionsHtml = answers.length
+      ? answers.map((item, index) => {
+          const statusClass = item.is_correct ? "result-correct" : "result-wrong";
+          const statusText = item.is_correct ? "إجابة صحيحة" : "إجابة خاطئة";
+
+          return `
+            <div class="result-question ${statusClass}">
+              <div class="result-question-head">
+                <strong>السؤال ${index + 1}</strong>
+                <span class="result-status">${statusText}</span>
+              </div>
+
+              <div class="result-question-text">
+                ${escapeHtml(item.question)}
+              </div>
+
+              <div class="result-answer-grid">
+                <div>
+                  <span class="muted">إجابة الطالب</span>
+                  <strong>${answerLabel(item.student_answer)}</strong>
+                </div>
+
+                <div>
+                  <span class="muted">الإجابة الصحيحة</span>
+                  <strong>${answerLabel(item.correct_answer)}</strong>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("")
+      : `
+        <div class="notice">
+          هذه النتيجة أُنشئت قبل إضافة حفظ تفاصيل الإجابات، لذلك لا توجد بيانات سؤالًا بسؤال لهذه المحاولة.
+        </div>
+      `;
+
+    document.getElementById("modalContent").innerHTML = `
+      <div class="grid2">
+        <div class="card">
+          <div class="muted">اسم الطالب</div>
+          <div class="big-value">${escapeHtml(r.student_name || "غير مسجل")}</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">كود الطالب</div>
+          <div class="big-value">${escapeHtml(r.student_code || "غير مسجل")}</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">الصف</div>
+          <div class="big-value">${escapeHtml(r.class_name || className(r.class_id))}</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">الامتحان</div>
+          <div class="big-value">${escapeHtml(r.exam_title || examName(r.exam_id))}</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">الإجابات الصحيحة</div>
+          <div class="big-value" style="color:#16a34a">${correct}</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">الإجابات الخاطئة</div>
+          <div class="big-value" style="color:#dc2626">${wrong}</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">الدرجة</div>
+          <div class="big-value">${correct} / ${total}</div>
+        </div>
+
+        <div class="card">
+          <div class="muted">النسبة المئوية</div>
+          <div class="big-value">${percentage.toFixed(1)}%</div>
+        </div>
+      </div>
+
+      <div class="certificate-actions">
+        <button class="btn btn-primary" onclick="printStudentCertificate(${Number(r.id)})">
+          🖨️ طباعة شهادة النتيجة
+        </button>
+      </div>
+
+      <div class="notice" style="margin-top:18px">
+        <strong>تفاصيل الإجابات:</strong>
+        تم تسجيل ${answers.length} سؤالًا لهذه المحاولة.
+      </div>
+
+      <div class="result-questions">
+        ${questionsHtml}
+      </div>
+    `;
+  } catch (error) {
+    console.error(error);
+    document.getElementById("modalContent").innerHTML = `
+      <div class="notice" style="color:#dc2626">
+        ${escapeHtml(error.message || "حدث خطأ أثناء تحميل التفاصيل.")}
+      </div>
+    `;
+  }
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function hideModal() {
+  document.getElementById("modal").classList.add("hidden");
+}
+function closeModal(event) {
+  if (event.target.id === "modal") hideModal();
+}
+
+document.getElementById("password").addEventListener("keydown", e => {
+  if (e.key === "Enter") login();
+});
+
+(async function checkSession(){
+  try {
+    const data = await api("/api/admin/check");
+    if (data && (data.logged_in || data.authenticated || data.ok)) {
+      document.getElementById("loginPage").classList.add("hidden");
+      document.getElementById("app").classList.remove("hidden");
+      loggedIn = true;
+      await init();
+    }
+  } catch(e) {}
+})();
+
+
+/* ===== Professional Dashboard Data ===== */
+function dashboardNum(value){
+  const n = Number(value);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function chartCanvasContext(id){
+  const canvas=document.getElementById(id);
+  if(!canvas) return null;
+  const rect=canvas.getBoundingClientRect();
+  const width=Math.max(240,Math.floor(rect.width||canvas.parentElement?.clientWidth||320));
+  const height=Math.max(170,Math.floor(rect.height||canvas.parentElement?.clientHeight||240));
+  const ratio=Math.max(1,window.devicePixelRatio||1);
+  canvas.width=Math.round(width*ratio); canvas.height=Math.round(height*ratio);
+  const ctx=canvas.getContext('2d'); if(!ctx) return null;
+  ctx.setTransform(ratio,0,0,ratio,0,0);
+  ctx.clearRect(0,0,width,height);
+  return {ctx,width,height};
+}
+function chartText(ctx,text,x,y,opts={}){
+  ctx.save();ctx.fillStyle=opts.color||'#748094';ctx.font=opts.font||'12px Arial';ctx.textAlign=opts.align||'center';ctx.textBaseline=opts.baseline||'middle';ctx.fillText(String(text),x,y);ctx.restore();
+}
+function drawAttemptsChart(results){
+  const c=chartCanvasContext('dashAttemptsChart');if(!c)return;
+  const {ctx,width:w,height:h}=c;const days=[];const now=new Date();
+  for(let i=6;i>=0;i--){const d=new Date(now);d.setHours(0,0,0,0);d.setDate(d.getDate()-i);days.push(d)}
+  const counts=days.map(day=>{const next=new Date(day);next.setDate(next.getDate()+1);return results.filter(r=>{const d=dashboardDate(r.created_at);return d&&d>=day&&d<next}).length});
+  const max=Math.max(1,...counts);const left=35,right=14,top=18,bottom=42,plotW=w-left-right,plotH=h-top-bottom;
+  ctx.strokeStyle='#e9edf3';ctx.lineWidth=1;ctx.fillStyle='#fff';
+  for(let i=0;i<4;i++){const y=top+plotH*i/3;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(w-right,y);ctx.stroke();chartText(ctx,Math.round(max*(1-i/3)),left-9,y,{align:'right',font:'11px Arial'})}
+  const pts=counts.map((v,i)=>({x:left+(days.length===1?0:i*plotW/(days.length-1)),y:top+plotH-(v/max)*plotH,v}));
+  if(pts.length){ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.lineTo(pts[pts.length-1].x,top+plotH);ctx.lineTo(pts[0].x,top+plotH);ctx.closePath();ctx.fillStyle='rgba(23,54,93,.09)';ctx.fill();ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.strokeStyle='#17365d';ctx.lineWidth=2.5;ctx.stroke();
+    pts.forEach((p,i)=>{ctx.beginPath();ctx.arc(p.x,p.y,4,0,Math.PI*2);ctx.fillStyle='#c89b3c';ctx.fill();chartText(ctx,p.v,p.x,p.y-13,{color:'#17365d',font:'bold 11px Arial'});chartText(ctx,days[i].toLocaleDateString('ar-EG',{day:'numeric',month:'numeric'}),p.x,h-19,{font:'11px Arial'})})}
+  if(!results.length)chartText(ctx,'لا توجد نتائج بعد',w/2,h/2,{font:'14px Arial'});
+}
+function dashboardDate(value){
+  if(!value)return null;let d=new Date(value);if(!Number.isNaN(d.getTime()))return d;
+  const m=String(value).match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);if(m){d=new Date(+m[1],+m[2]-1,+m[3]);return Number.isNaN(d.getTime())?null:d}return null;
+}
+function drawExamAverageChart(results){
+  const c=chartCanvasContext('dashExamAverageChart');if(!c)return;
+  const {ctx,width:w,height:h}=c;const groups=new Map();
+  results.forEach(r=>{const name=String(r.exam_title||('امتحان '+(r.exam_id||''))).trim();if(!groups.has(name))groups.set(name,[]);groups.get(name).push(normalizedPercentage(r))});
+  const rows=[...groups.entries()].map(([name,values])=>({name,avg:values.reduce((a,b)=>a+b,0)/values.length,count:values.length})).sort((a,b)=>b.avg-a.avg).slice(0,5).reverse();
+  if(!rows.length){chartText(ctx,'لا توجد نتائج امتحانات بعد',w/2,h/2,{font:'14px Arial'});return}
+  const left=rows.reduce((m,r)=>Math.max(m,Math.min(125,r.name.length*7)),68),right=36,top=10,bottom=10,plotW=w-left-right,plotH=h-top-bottom,rowH=plotH/rows.length;
+  rows.forEach((r,i)=>{const y=top+i*rowH+rowH*.22,bh=Math.min(25,rowH*.55),bw=Math.max(0,plotW*Math.min(100,Math.max(0,r.avg))/100);chartText(ctx,r.name.length>22?r.name.slice(0,21)+'…':r.name,left-9,y+bh/2,{align:'right',font:'11px Arial',color:'#425466'});ctx.fillStyle='#edf1f5';roundRect(ctx,left,y,plotW,bh,7);ctx.fill();ctx.fillStyle=i===rows.length-1?'#c89b3c':'#17365d';roundRect(ctx,left,y,bw,bh,7);ctx.fill();chartText(ctx,Math.round(r.avg)+'%',Math.min(w-18,left+bw+22),y+bh/2,{font:'bold 11px Arial',color:'#17365d'})});
+}
+function roundRect(ctx,x,y,w,h,r){if(w<=0)return;const rr=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+rr,y);ctx.arcTo(x+w,y,x+w,y+h,rr);ctx.arcTo(x+w,y+h,x,y+h,rr);ctx.arcTo(x,y+h,x,y,rr);ctx.arcTo(x,y,x+w,y,rr);ctx.closePath()}
+function drawPassChart(results){
+  const c=chartCanvasContext('dashPassChart');if(!c)return;const {ctx,width:w,height:h}=c;
+  const pass=results.filter(r=>normalizedPercentage(r)>=50).length,review=results.length-pass,total=results.length;
+  const cx=w/2,cy=h/2,r=Math.min(w,h)*.34,inner=r*.62;
+  if(!total){ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='#edf1f5';ctx.lineWidth=r-inner;ctx.stroke();chartText(ctx,'لا توجد نتائج',cx,cy,{font:'13px Arial'});}
+  else{let start=-Math.PI/2;[[pass,'#17365d'],[review,'#c89b3c']].forEach(([v,color])=>{if(!v)return;const end=start+(v/total)*Math.PI*2;ctx.beginPath();ctx.arc(cx,cy,r,start,end);ctx.strokeStyle=color;ctx.lineWidth=r-inner;ctx.lineCap='butt';ctx.stroke();start=end});chartText(ctx,total,cx,cy-5,{font:'bold 28px Arial',color:'#102a43'});chartText(ctx,'نتيجة',cx,cy+19,{font:'12px Arial'})}
+  const legend=document.getElementById('dashPassLegend');if(legend)legend.innerHTML=`<div class="dashboard-chart-legend-item"><span class="dashboard-chart-swatch" style="background:#17365d"></span><span>ناجح (50% فأكثر)</span><strong>${pass} · ${total?Math.round(pass/total*100):0}%</strong></div><div class="dashboard-chart-legend-item"><span class="dashboard-chart-swatch" style="background:#c89b3c"></span><span>يحتاج إلى مراجعة</span><strong>${review} · ${total?Math.round(review/total*100):0}%</strong></div><div class="dashboard-chart-legend-item"><span class="dashboard-chart-swatch" style="background:#d9e0e8"></span><span>إجمالي النتائج</span><strong>${total}</strong></div>`;
+}
+let dashboardChartResults=[];
+function renderDashboardCharts(results){dashboardChartResults=Array.isArray(results)?results:[];drawAttemptsChart(dashboardChartResults);drawExamAverageChart(dashboardChartResults);drawPassChart(dashboardChartResults)}
+window.addEventListener('resize',()=>{if(document.getElementById('dashboardCharts')&&!document.getElementById('dashboardCharts').classList.contains('hidden'))renderDashboardCharts(dashboardChartResults)});
+
+function getDashboardStudentRanking(){
+  const results = Array.isArray(dashboardChartResults) ? dashboardChartResults : [];
+  const byStudent = new Map();
+  results.forEach(r => {
+    const name = String(r.student_name || "طالب").trim();
+    const code = String(r.student_code || "").trim();
+    const key = code ? "code:" + code : "name:" + name;
+    if(!byStudent.has(key)) byStudent.set(key, {name, code, count:0, sum:0, best:0});
+    const item = byStudent.get(key), p = normalizedPercentage(r);
+    item.count++; item.sum += p; item.best = Math.max(item.best, p);
+  });
+  return [...byStudent.values()].map(s => ({...s, average:s.count ? s.sum/s.count : 0}))
+    .sort((a,b) => b.average-a.average || b.best-a.best || b.count-a.count);
+}
+function exportDashboardStudentReport(){
+  const rows = getDashboardStudentRanking();
+  if(!rows.length){ alert("لا توجد نتائج لتصديرها حسب الفلاتر الحالية."); return; }
+  const csvCell = value => '"' + String(value ?? '').replace(/"/g,'""') + '"';
+  const lines = [["الترتيب","اسم الطالب","كود الطالب","عدد المحاولات","متوسط الدرجات %","أعلى درجة %"],
+    ...rows.map((s,i)=>[i+1,s.name,s.code,s.count,s.average.toFixed(1),s.best.toFixed(1)])];
+  const csv = '\ufeff' + lines.map(row=>row.map(csvCell).join(',')).join('\r\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='bariq-noor-student-performance.csv';
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+function printDashboardStudentReport(){
+  const rows = getDashboardStudentRanking();
+  if(!rows.length){ alert("لا توجد نتائج لطباعتها حسب الفلاتر الحالية."); return; }
+  const className = document.getElementById('dashboardClassFilter')?.selectedOptions?.[0]?.textContent || 'كل الفصول';
+  const examName = document.getElementById('dashboardExamFilter')?.selectedOptions?.[0]?.textContent || 'كل الامتحانات';
+  const safe = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const tableRows = rows.map((s,i)=>`<tr><td>${i+1}</td><td>${safe(s.name)}</td><td>${safe(s.code || '—')}</td><td>${s.count}</td><td>${formatPercent(s.average)}</td><td>${formatPercent(s.best)}</td></tr>`).join('');
+  const win = window.open('', '_blank', 'width=1000,height=700');
+  if(!win){ alert('اسمح بفتح النوافذ المنبثقة لطباعة التقرير.'); return; }
+  win.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>تقرير أداء الطلاب - بريق نور</title><style>body{font-family:Tahoma,Arial,sans-serif;padding:28px;color:#172b4d}h1{text-align:center}p{margin:8px 0 18px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #cbd5e1;padding:10px;text-align:right}th{background:#eef2f7}footer{margin-top:20px;color:#64748b;font-size:12px}@media print{button{display:none}}</style></head><body><h1>بريق نور للأستاذ أنور أبو ستيت</h1><h2>تقرير أداء الطلاب</h2><p>الفصل: ${safe(className)} | الامتحان: ${safe(examName)}</p><table><thead><tr><th>الترتيب</th><th>اسم الطالب</th><th>كود الطالب</th><th>عدد المحاولات</th><th>متوسط الدرجات</th><th>أعلى درجة</th></tr></thead><tbody>${tableRows}</tbody></table><footer>تم إنشاء التقرير من النتائج المعروضة في لوحة التحكم.</footer><script>window.onload=()=>window.print();<\/script></body></html>`);
+  win.document.close();
+}
+
+function resetDashboardFilters(){
+  const classFilter=document.getElementById("dashboardClassFilter");
+  const examFilter=document.getElementById("dashboardExamFilter");
+  if(classFilter) classFilter.value="";
+  if(examFilter) examFilter.value="";
+  loadDashboardOverview();
+}
+function fillDashboardFilter(selectId, values, valueKey, labelKey, allLabel){
+  const el=document.getElementById(selectId); if(!el)return;
+  const selected=el.value;
+  const unique=new Map();
+  values.forEach(item=>{
+    const value=String(item[valueKey]??"").trim();
+    const label=String(item[labelKey]??"").trim();
+    if(value && label && !unique.has(value)) unique.set(value,label);
+  });
+  el.innerHTML=`<option value="">${esc(allLabel)}</option>`+[...unique.entries()].sort((a,b)=>a[1].localeCompare(b[1],'ar')).map(([v,l])=>`<option value="${esc(v)}">${esc(l)}</option>`).join("");
+  if(unique.has(selected)) el.value=selected;
+}
+
+async function loadDashboardOverview(){
+  const examCount = document.getElementById("dashExamCount");
+  const questionCount = document.getElementById("dashQuestionCount");
+  const studentCount = document.getElementById("dashStudentCount");
+  const averageEl = document.getElementById("dashAverage");
+  const passRateEl = document.getElementById("dashPassRate");
+  const examSub = document.getElementById("dashExamSub");
+  const questionSub = document.getElementById("dashQuestionSub");
+  const topEl = document.getElementById("dashboardTopStudents");
+  const usageEl = document.getElementById("dashboardExamUsage");
+  const recentEl = document.getElementById("dashboardRecentResults");
+  try {
+    const [examsRes, resultsRes, studentsRes] = await Promise.all([
+      fetch("/api/admin/exams"), fetch("/api/admin/results"), fetch("/api/admin/students")
+    ]);
+    if(!examsRes.ok || !resultsRes.ok || !studentsRes.ok) throw new Error("تعذر تحميل بيانات لوحة التحكم");
+    const [examsRaw, resultsRaw, studentsRaw] = await Promise.all([
+      examsRes.json(), resultsRes.json(), studentsRes.json()
+    ]);
+    const exams = Array.isArray(examsRaw) ? examsRaw : (examsRaw.exams || []);
+    const results = Array.isArray(resultsRaw) ? resultsRaw : (resultsRaw.results || []);
+    const students = Array.isArray(studentsRaw) ? studentsRaw : (studentsRaw.students || []);
+    fillDashboardFilter("dashboardClassFilter", results, "class_id", "class_name", "كل الفصول");
+    fillDashboardFilter("dashboardExamFilter", results, "exam_id", "exam_title", "كل الامتحانات");
+    const selectedClass=document.getElementById("dashboardClassFilter")?.value || "";
+    const selectedExam=document.getElementById("dashboardExamFilter")?.value || "";
+    const analyticsResults=results.filter(r=>(!selectedClass || String(r.class_id??"")===selectedClass) && (!selectedExam || String(r.exam_id??"")===selectedExam));
+    const published = exams.filter(e => Number(e.published) === 1).length;
+    const totalQuestions = exams.reduce((sum, e) => sum + dashboardNum(e.question_count), 0);
+    const percentages = analyticsResults.map(normalizedPercentage).filter(Number.isFinite);
+    const average = percentages.length ? percentages.reduce((a,b) => a+b, 0) / percentages.length : 0;
+    const passed = percentages.filter(v => v >= 50).length;
+    const passRate = percentages.length ? passed / percentages.length * 100 : 0;
+    examCount.textContent = exams.length;
+    questionCount.textContent = totalQuestions;
+    studentCount.textContent = studentsRaw.total_accounts ?? students.length;
+    averageEl.textContent = formatPercent(average);
+    passRateEl.textContent = "نسبة النجاح: " + formatPercent(passRate);
+    examSub.textContent = published + " منشور";
+    questionSub.textContent = "في " + exams.length + " امتحان";
+    // Draw after the browser completes layout; hidden/just-shown canvases can measure as zero.
+    dashboardChartResults = analyticsResults;
+    requestAnimationFrame(() => requestAnimationFrame(() => renderDashboardCharts(analyticsResults)));
+
+    // Aggregate attempts by student to avoid showing the same student several times.
+    const byStudent = new Map();
+    analyticsResults.forEach(r => {
+      const name = String(r.student_name || "طالب").trim();
+      const code = String(r.student_code || "").trim();
+      const key = code ? "code:" + code : "name:" + name;
+      if(!byStudent.has(key)) byStudent.set(key, {name, count:0, sum:0, best:0});
+      const item = byStudent.get(key), p = normalizedPercentage(r);
+      item.count++; item.sum += p; item.best = Math.max(item.best, p);
+    });
+    const topStudents = [...byStudent.values()].map(s => ({...s, average:s.sum/s.count}))
+      .sort((a,b) => b.average-a.average || b.best-a.best || b.count-a.count).slice(0,5);
+    topEl.innerHTML = topStudents.length ? topStudents.map((s,i) => `
+      <div class="dashboard-rank-row">
+        <div class="dashboard-rank-num">${i+1}</div>
+        <div><div class="dashboard-rank-name">${esc(s.name)}</div>
+        <div class="dashboard-rank-exam">${s.count} امتحان · أعلى درجة ${formatPercent(s.best)}</div></div>
+        <div class="dashboard-rank-score">${formatPercent(s.average)}</div>
+      </div>`).join("") : '<div class="dashboard-empty">لا توجد نتائج طلاب حتى الآن.</div>';
+
+    const usage = {};
+    analyticsResults.forEach(r => {
+      const key = String(r.exam_id ?? r.exam_title ?? "unknown");
+      const title = r.exam_title || ("امتحان رقم " + key);
+      if(!usage[key]) usage[key] = {title, count:0};
+      usage[key].count++;
+    });
+    const usageList = Object.values(usage).sort((a,b) => b.count-a.count).slice(0,6);
+    if(!usageList.length) usageEl.innerHTML = '<div class="dashboard-empty">لا توجد محاولات امتحانات حتى الآن.</div>';
+    else {
+      const max = Math.max(...usageList.map(x=>x.count),1);
+      usageEl.innerHTML = usageList.map(item => `
+        <div class="dashboard-progress-item"><div class="dashboard-progress-name">${esc(item.title)}</div>
+        <div class="dashboard-progress-track"><div class="dashboard-progress-bar" style="width:${item.count/max*100}%"></div></div>
+        <div class="dashboard-progress-value">${item.count}</div></div>`).join("");
+    }
+
+    const recent = [...analyticsResults].sort((a,b) => {
+      const da = Date.parse(a.created_at || "") || 0;
+      const db = Date.parse(b.created_at || "") || 0;
+      return db - da || dashboardNum(b.id) - dashboardNum(a.id);
+    }).slice(0,6);
+    if (recentEl) {
+      recentEl.innerHTML = recent.length ? `
+        <table class="dashboard-recent-table">
+          <thead><tr><th>الطالب</th><th>الامتحان</th><th>الصف</th><th>الدرجة</th><th>النسبة</th><th>التاريخ</th></tr></thead>
+          <tbody>${recent.map(r => `
+            <tr>
+              <td>${esc(r.student_name || "—")}</td>
+              <td>${esc(r.exam_title || "—")}</td>
+              <td>${esc(r.class_name || "—")}</td>
+              <td>${dashboardNum(r.correct)} / ${dashboardNum(r.total)}</td>
+              <td><span class="dashboard-score-pill">${formatPercent(normalizedPercentage(r))}</span></td>
+              <td>${esc(r.created_at || "—")}</td>
+            </tr>`).join("")}</tbody>
+        </table>` : '<div class="dashboard-empty">لا توجد نتائج مسجلة حتى الآن.</div>';
+    }
+  } catch(error) {
+    console.error(error);
+    if(topEl) topEl.innerHTML = '<div class="dashboard-empty">تعذر تحميل الإحصائيات. اضغط تحديث بعد التأكد من تسجيل دخول المدير.</div>';
+    if(usageEl) usageEl.innerHTML = '<div class="dashboard-empty">تعذر تحميل البيانات.</div>';
+    if(recentEl) recentEl.innerHTML = '<div class="dashboard-error">تعذر تحميل أحدث النتائج. تأكد من تسجيل الدخول ثم اضغط تحديث.</div>';
+  }
+}
+
+</script>
+</body>
+</html>

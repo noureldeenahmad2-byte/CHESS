@@ -1,0 +1,2471 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>الامتحان | بريق نور</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Tahoma,
+                Arial,
+                sans-serif;
+
+            background:
+                #f1f5f9;
+
+            color:
+                #1e293b;
+
+        }
+
+
+        button,
+        input {
+
+            font-family: inherit;
+
+        }
+
+
+        .hidden {
+
+            display: none !important;
+
+        }
+
+
+        /* =========================
+           الهيدر
+        ========================= */
+
+        .header {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #1d4ed8
+                );
+
+            color: white;
+
+            padding:
+                18px 25px;
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .header-title {
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+        }
+
+
+        .student-info {
+
+            font-size: 14px;
+
+            opacity: .95;
+
+        }
+
+
+        /* =========================
+           المؤقت
+        ========================= */
+
+        .timer-box {
+
+            background:
+                rgba(255,255,255,.15);
+
+            border:
+                1px solid
+                rgba(255,255,255,.3);
+
+            border-radius:
+                12px;
+
+            padding:
+                10px 18px;
+
+            text-align:
+                center;
+
+        }
+
+
+        .timer-label {
+
+            font-size: 12px;
+
+            margin-bottom:
+                3px;
+
+        }
+
+
+        .timer {
+
+            font-size: 24px;
+
+            font-weight: bold;
+
+            direction:
+                ltr;
+
+        }
+
+
+        .timer.warning {
+
+            color:
+                #facc15;
+
+        }
+
+
+        .timer.danger {
+
+            color:
+                #fecaca;
+
+        }
+
+
+        /* =========================
+           الصفحة
+        ========================= */
+
+        .container {
+
+            width:
+                94%;
+
+            max-width:
+                1100px;
+
+            margin:
+                25px auto;
+
+        }
+
+
+        /* =========================
+           معلومات الامتحان
+        ========================= */
+
+        .exam-info {
+
+            background:
+                white;
+
+            border-radius:
+                16px;
+
+            padding:
+                20px;
+
+            margin-bottom:
+                20px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,.06);
+
+        }
+
+
+        .exam-info h1 {
+
+            margin:
+                0 0 10px;
+
+            color:
+                #1d4ed8;
+
+            font-size:
+                25px;
+
+        }
+
+
+        .exam-details {
+
+            display:
+                flex;
+
+            gap:
+                15px;
+
+            flex-wrap:
+                wrap;
+
+            color:
+                #64748b;
+
+        }
+
+
+        .detail {
+
+            background:
+                #f8fafc;
+
+            padding:
+                9px 13px;
+
+            border-radius:
+                9px;
+
+        }
+
+
+        /* =========================
+           التقدم
+        ========================= */
+
+        .progress-section {
+
+            background:
+                white;
+
+            border-radius:
+                16px;
+
+            padding:
+                18px;
+
+            margin-bottom:
+                20px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,.06);
+
+        }
+
+
+        .progress-top {
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            margin-bottom:
+                10px;
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .progress-bar {
+
+            height:
+                10px;
+
+            background:
+                #e2e8f0;
+
+            border-radius:
+                20px;
+
+            overflow:
+                hidden;
+
+        }
+
+
+        .progress-fill {
+
+            height:
+                100%;
+
+            width:
+                0%;
+
+            background:
+                #2563eb;
+
+            transition:
+                width .3s;
+
+        }
+
+
+        /* =========================
+           السؤال
+        ========================= */
+
+        .question-card {
+
+            background:
+                white;
+
+            border-radius:
+                18px;
+
+            padding:
+                25px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,.06);
+
+        }
+
+
+        .question-number {
+
+            display:
+                inline-block;
+
+            background:
+                #dbeafe;
+
+            color:
+                #1d4ed8;
+
+            padding:
+                7px 12px;
+
+            border-radius:
+                20px;
+
+            font-size:
+                13px;
+
+            font-weight:
+                bold;
+
+            margin-bottom:
+                15px;
+
+        }
+
+
+        .question-text {
+
+            font-size:
+                21px;
+
+            font-weight:
+                bold;
+
+            line-height:
+                1.8;
+
+            margin-bottom:
+                25px;
+
+        }
+
+
+        /* =========================
+           الاختيارات
+        ========================= */
+
+        .options {
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            gap:
+                12px;
+
+        }
+
+
+        .option {
+
+            border:
+                2px solid
+                #e2e8f0;
+
+            border-radius:
+                12px;
+
+            padding:
+                15px;
+
+            cursor:
+                pointer;
+
+            transition:
+                .2s;
+
+            background:
+                white;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                12px;
+
+        }
+
+
+        .option:hover {
+
+            border-color:
+                #93c5fd;
+
+            background:
+                #f8fbff;
+
+        }
+
+
+        .option.selected {
+
+            border-color:
+                #2563eb;
+
+            background:
+                #eff6ff;
+
+        }
+
+
+        .option-letter {
+
+            width:
+                35px;
+
+            height:
+                35px;
+
+            min-width:
+                35px;
+
+            border-radius:
+                50%;
+
+            background:
+                #e2e8f0;
+
+            display:
+                flex;
+
+            justify-content:
+                center;
+
+            align-items:
+                center;
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .option.selected
+        .option-letter {
+
+            background:
+                #2563eb;
+
+            color:
+                white;
+
+        }
+
+
+        .option-text {
+
+            font-size:
+                16px;
+
+            line-height:
+                1.6;
+
+        }
+
+
+        /* =========================
+           أزرار التنقل
+        ========================= */
+
+        .navigation {
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            gap:
+                10px;
+
+            margin-top:
+                25px;
+
+        }
+
+
+        .btn {
+
+            border:
+                none;
+
+            border-radius:
+                10px;
+
+            padding:
+                12px 20px;
+
+            cursor:
+                pointer;
+
+            font-size:
+                15px;
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .btn-primary {
+
+            background:
+                #2563eb;
+
+            color:
+                white;
+
+        }
+
+
+        .btn-secondary {
+
+            background:
+                #64748b;
+
+            color:
+                white;
+
+        }
+
+
+        .btn-success {
+
+            background:
+                #16a34a;
+
+            color:
+                white;
+
+        }
+
+
+        .btn-danger {
+
+            background:
+                #dc2626;
+
+            color:
+                white;
+
+        }
+
+
+        .btn:disabled {
+
+            opacity:
+                .45;
+
+            cursor:
+                not-allowed;
+
+        }
+
+
+        /* =========================
+           أرقام الأسئلة
+        ========================= */
+
+        .question-navigator {
+
+            background:
+                white;
+
+            border-radius:
+                16px;
+
+            padding:
+                18px;
+
+            margin-top:
+                20px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,.06);
+
+        }
+
+
+        .navigator-title {
+
+            font-weight:
+                bold;
+
+            margin-bottom:
+                12px;
+
+        }
+
+
+        .question-numbers {
+
+            display:
+                flex;
+
+            flex-wrap:
+                wrap;
+
+            gap:
+                8px;
+
+        }
+
+
+        .question-number-btn {
+
+            width:
+                40px;
+
+            height:
+                40px;
+
+            border:
+                1px solid
+                #cbd5e1;
+
+            background:
+                white;
+
+            border-radius:
+                9px;
+
+            cursor:
+                pointer;
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .question-number-btn.current {
+
+            background:
+                #2563eb;
+
+            color:
+                white;
+
+            border-color:
+                #2563eb;
+
+        }
+
+
+        .question-number-btn.answered {
+
+            background:
+                #dcfce7;
+
+            color:
+                #166534;
+
+            border-color:
+                #22c55e;
+
+        }
+
+
+        .question-number-btn.current.answered {
+
+            background:
+                #2563eb;
+
+            color:
+                white;
+
+            border-color:
+                #2563eb;
+
+        }
+
+
+        /* =========================
+           شاشة التحميل
+        ========================= */
+
+        .loading {
+
+            text-align:
+                center;
+
+            padding:
+                70px 20px;
+
+            font-size:
+                20px;
+
+            color:
+                #64748b;
+
+        }
+
+
+        /* =========================
+           شاشة الخطأ
+        ========================= */
+
+        .error-box {
+
+            max-width:
+                600px;
+
+            margin:
+                80px auto;
+
+            background:
+                white;
+
+            padding:
+                35px;
+
+            border-radius:
+                18px;
+
+            text-align:
+                center;
+
+            box-shadow:
+                0 10px 40px
+                rgba(0,0,0,.08);
+
+        }
+
+
+        .error-box h2 {
+
+            color:
+                #dc2626;
+
+        }
+
+
+        /* =========================
+           شاشة النتيجة
+        ========================= */
+
+        .result-box {
+
+            max-width:
+                700px;
+
+            margin:
+                50px auto;
+
+            background:
+                white;
+
+            border-radius:
+                20px;
+
+            padding:
+                35px;
+
+            text-align:
+                center;
+
+            box-shadow:
+                0 10px 40px
+                rgba(0,0,0,.08);
+
+        }
+
+
+        .result-title {
+
+            font-size:
+                28px;
+
+            color:
+                #16a34a;
+
+            margin-bottom:
+                10px;
+
+        }
+
+
+        .percentage {
+
+            font-size:
+                60px;
+
+            font-weight:
+                bold;
+
+            color:
+                #2563eb;
+
+            margin:
+                20px 0;
+
+        }
+
+
+        .result-grid {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(3,1fr);
+
+            gap:
+                12px;
+
+            margin:
+                25px 0;
+
+        }
+
+
+        .result-card {
+
+            background:
+                #f8fafc;
+
+            border-radius:
+                12px;
+
+            padding:
+                18px;
+
+        }
+
+
+        .result-card strong {
+
+            display:
+                block;
+
+            font-size:
+                24px;
+
+            margin-bottom:
+                5px;
+
+        }
+
+
+        .result-message {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0 20px;
+            color: #475569;
+        }
+
+        .result-score {
+            font-size: 22px;
+            font-weight: bold;
+            color: #0f172a;
+            margin-bottom: 10px;
+        }
+
+        .result-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .result-actions .btn {
+            min-width: 170px;
+        }
+
+                /* =========================
+           موبايل
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            .header {
+
+                padding:
+                    15px;
+
+            }
+
+
+            .header-title {
+
+                font-size:
+                    18px;
+
+            }
+
+
+            .timer {
+
+                font-size:
+                    20px;
+
+            }
+
+
+            .container {
+
+                width:
+                    96%;
+
+                margin:
+                    15px auto;
+
+            }
+
+
+            .question-card {
+
+                padding:
+                    18px;
+
+            }
+
+
+            .question-text {
+
+                font-size:
+                    18px;
+
+            }
+
+
+            .navigation {
+
+                flex-direction:
+                    column;
+
+            }
+
+
+            .navigation .btn {
+
+                width:
+                    100%;
+
+            }
+
+
+            .result-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .percentage {
+
+                font-size:
+                    48px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     منطقة الامتحان
+========================= -->
+
+<div id="examArea" class="hidden">
+
+
+    <header class="header">
+
+
+        <div>
+
+            <div
+                id="headerTitle"
+                class="header-title"
+            >
+                امتحان الدراسات الاجتماعية
+            </div>
+
+
+            <div
+                id="studentInfo"
+                class="student-info"
+            >
+                الطالب
+            </div>
+
+        </div>
+
+
+        <div class="timer-box">
+
+            <div class="timer-label">
+                الوقت المتبقي
+            </div>
+
+            <div
+                id="timer"
+                class="timer"
+            >
+                00:00
+            </div>
+
+        </div>
+
+
+    </header>
+
+
+    <main class="container">
+
+
+        <!-- معلومات الامتحان -->
+
+        <section class="exam-info">
+
+            <h1 id="examTitle">
+                جاري تحميل الامتحان...
+            </h1>
+
+
+            <div class="exam-details">
+
+                <div class="detail">
+
+                    الصف:
+
+                    <strong
+                        id="className"
+                    >
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    عدد الأسئلة:
+
+                    <strong
+                        id="questionCount"
+                    >
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    مدة الامتحان:
+
+                    <strong
+                        id="duration"
+                    >
+                        -
+                    </strong>
+
+                    دقيقة
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- شريط التقدم -->
+
+        <section class="progress-section">
+
+            <div class="progress-top">
+
+                <span>
+                    التقدم في الامتحان
+                </span>
+
+                <span id="progressText">
+                    0 / 0
+                </span>
+
+            </div>
+
+
+            <div class="progress-bar">
+
+                <div
+                    id="progressFill"
+                    class="progress-fill"
+                ></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- السؤال -->
+
+        <section class="question-card">
+
+
+            <div
+                id="questionNumber"
+                class="question-number"
+            >
+                السؤال 1
+            </div>
+
+
+            <div
+                id="questionText"
+                class="question-text"
+            >
+                جاري تحميل السؤال...
+            </div>
+
+
+            <div
+                id="options"
+                class="options"
+            >
+            </div>
+
+
+            <div class="navigation">
+
+
+                <button
+                    id="previousBtn"
+                    class="btn btn-secondary"
+                    onclick="previousQuestion()"
+                >
+                    السؤال السابق
+                </button>
+
+
+                <button
+                    id="nextBtn"
+                    class="btn btn-primary"
+                    onclick="nextQuestion()"
+                >
+                    السؤال التالي
+                </button>
+
+
+                <button
+                    id="submitBtn"
+                    class="btn btn-success hidden"
+                    onclick="submitExam(false)"
+                >
+                    إنهاء الامتحان
+                </button>
+
+
+            </div>
+
+
+        </section>
+
+
+        <!-- أرقام الأسئلة -->
+
+        <section class="question-navigator">
+
+            <div class="navigator-title">
+                الانتقال إلى سؤال
+            </div>
+
+
+            <div
+                id="questionNumbers"
+                class="question-numbers"
+            >
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+<!-- =========================
+     التحميل
+========================= -->
+
+<div
+    id="loadingScreen"
+    class="loading"
+>
+
+    جاري تحميل الامتحان...
+
+</div>
+
+
+<!-- =========================
+     الخطأ
+========================= -->
+
+<div
+    id="errorScreen"
+    class="error-box hidden"
+>
+
+    <h2>
+        تعذر فتح الامتحان
+    </h2>
+
+
+    <p id="errorMessage">
+        حدث خطأ أثناء تحميل الامتحان.
+    </p>
+
+
+    <button
+        class="btn btn-primary"
+        onclick="window.location.href='exams.html'"
+    >
+        العودة للامتحانات
+    </button>
+
+</div>
+
+
+<!-- =========================
+     النتيجة
+========================= -->
+
+<div
+    id="resultScreen"
+    class="hidden"
+>
+
+    <div class="result-box">
+
+
+        <div class="result-title">
+            تم إنهاء الامتحان
+        </div>
+
+
+        <div id="resultStudent">
+            الطالب
+        </div>
+
+
+        <div
+            id="percentage"
+            class="percentage"
+        >
+            0%
+        </div>
+
+        <div id="resultMessage" class="result-message">
+            أحسنت!
+        </div>
+
+        <div id="resultScore" class="result-score">
+            الدرجة: 0 / 0
+        </div>
+
+
+        <div class="result-grid">
+
+
+            <div class="result-card">
+
+                <strong id="correctResult">
+                    0
+                </strong>
+
+                إجابة صحيحة
+
+            </div>
+
+
+            <div class="result-card">
+
+                <strong id="wrongResult">
+                    0
+                </strong>
+
+                إجابة خاطئة
+
+            </div>
+
+
+            <div class="result-card">
+
+                <strong id="totalResult">
+                    0
+                </strong>
+
+                إجمالي الأسئلة
+
+            </div>
+
+
+        </div>
+
+
+        <div class="result-actions">
+
+            <button
+                class="btn btn-success"
+                onclick="retryExam()"
+            >
+                إعادة الامتحان
+            </button>
+
+            <button
+                class="btn btn-primary"
+                onclick="window.location.href='exams.html'"
+            >
+                العودة إلى الامتحانات
+            </button>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+/* =========================
+   بيانات الامتحان
+========================= */
+
+let examId = null;
+
+let examData = null;
+
+let questions = [];
+
+let currentQuestion = 0;
+
+let answers = {};
+
+let timerInterval = null;
+
+let remainingSeconds = 0;
+
+let examSubmitted = false;
+
+
+/* =========================
+   الحصول على رقم الامتحان
+========================= */
+
+function getExamId() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const urlExamId =
+        params.get("exam_id");
+
+
+    if (urlExamId) {
+
+        return urlExamId;
+
+    }
+
+
+    return localStorage.getItem(
+        "selectedExamId"
+    );
+
+}
+
+
+/* =========================
+   الهروب من HTML
+========================= */
+
+function escapeHtml(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================
+   تحميل الامتحان
+========================= */
+
+async function loadExam() {
+
+    examId =
+        getExamId();
+
+
+    if (!examId) {
+
+        showError(
+            "لم يتم تحديد رقم الامتحان."
+        );
+
+        return;
+
+    }
+
+
+    const studentName =
+        localStorage.getItem(
+            "studentName"
+        );
+
+
+    const studentCode =
+        localStorage.getItem(
+            "studentCode"
+        );
+
+
+    if (
+        !studentName ||
+        !studentCode
+    ) {
+
+        window.location.href =
+            `student.html?exam_id=${examId}`;
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/exam/${examId}`
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "تعذر تحميل الامتحان"
+            );
+
+        }
+
+
+        examData =
+            data.exam || data;
+
+
+        if (
+            examData.published === false
+        ) {
+
+            showError(
+                "هذا الامتحان غير منشور حاليًا."
+            );
+
+            return;
+
+        }
+
+
+        questions =
+            examData.questions || [];
+
+
+        if (!questions.length) {
+
+            showError(
+                "هذا الامتحان لا يحتوي على أسئلة حتى الآن."
+            );
+
+            return;
+
+        }
+
+
+        setupExam(
+            studentName,
+            studentCode
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        showError(
+            error.message ||
+            "حدث خطأ أثناء تحميل الامتحان."
+        );
+
+    }
+
+}
+
+
+/* =========================
+   إعداد الامتحان
+========================= */
+
+function setupExam(
+    studentName,
+    studentCode
+) {
+
+    document
+        .getElementById("loadingScreen")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("examArea")
+        .classList.remove("hidden");
+
+
+    document.getElementById(
+        "headerTitle"
+    ).textContent =
+        examData.title ||
+        "امتحان الدراسات الاجتماعية";
+
+
+    document.getElementById(
+        "examTitle"
+    ).textContent =
+        examData.title ||
+        "امتحان الدراسات الاجتماعية";
+
+
+    document.getElementById(
+        "studentInfo"
+    ).textContent =
+        `الطالب: ${studentName} | الكود: ${studentCode}`;
+
+
+    document.getElementById(
+        "className"
+    ).textContent =
+        examData.class_name ||
+        localStorage.getItem(
+            "studentClass"
+        ) ||
+        "-";
+
+
+    document.getElementById(
+        "questionCount"
+    ).textContent =
+        questions.length;
+
+
+    const duration =
+        Number(
+            examData.duration || 30
+        );
+
+
+    document.getElementById(
+        "duration"
+    ).textContent =
+        duration;
+
+
+    remainingSeconds =
+        duration * 60;
+
+
+    renderQuestionNumbers();
+
+    showQuestion();
+
+    startTimer();
+
+}
+
+
+/* =========================
+   عرض السؤال
+========================= */
+
+function showQuestion() {
+
+    if (!questions.length) {
+
+        return;
+
+    }
+
+
+    const question =
+        questions[currentQuestion];
+
+
+    document.getElementById(
+        "questionNumber"
+    ).textContent =
+        `السؤال ${currentQuestion + 1}`;
+
+
+    document.getElementById(
+        "questionText"
+    ).textContent =
+        question.question;
+
+
+    const options =
+        document.getElementById(
+            "options"
+        );
+
+
+    const optionData = [
+
+        {
+            letter: "a",
+            text: question.option_a
+        },
+
+        {
+            letter: "b",
+            text: question.option_b
+        },
+
+        {
+            letter: "c",
+            text: question.option_c
+        },
+
+        {
+            letter: "d",
+            text: question.option_d
+        }
+
+    ];
+
+
+    options.innerHTML =
+        optionData.map(
+            option => {
+
+                const selected =
+                    answers[String(question.id)] ===
+                    option.letter;
+
+
+                return `
+
+                    <div
+                        class="option ${
+                            selected
+                                ? "selected"
+                                : ""
+                        }"
+                        onclick="selectAnswer('${option.letter}')"
+                    >
+
+                        <div
+                            class="option-letter"
+                        >
+                            ${option.letter.toUpperCase()}
+                        </div>
+
+                        <div
+                            class="option-text"
+                        >
+                            ${escapeHtml(option.text)}
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        ).join("");
+
+
+    updateNavigation();
+
+    updateProgress();
+
+    updateQuestionNumbers();
+
+}
+
+
+/* =========================
+   اختيار إجابة
+========================= */
+
+function selectAnswer(letter) {
+
+    if (examSubmitted) {
+
+        return;
+
+    }
+
+    const question = questions[currentQuestion];
+
+    if (!question || question.id === undefined || question.id === null) {
+        return;
+    }
+
+    // حفظ الإجابة باستخدام رقم السؤال الحقيقي في قاعدة البيانات
+    answers[String(question.id)] = letter;
+
+    showQuestion();
+
+}
+
+
+/* =========================
+   السؤال السابق
+========================= */
+
+function previousQuestion() {
+
+    if (
+        currentQuestion <= 0
+    ) {
+
+        return;
+
+    }
+
+
+    currentQuestion--;
+
+    showQuestion();
+
+}
+
+
+/* =========================
+   السؤال التالي
+========================= */
+
+function nextQuestion() {
+
+    if (
+        currentQuestion >=
+        questions.length - 1
+    ) {
+
+        return;
+
+    }
+
+
+    currentQuestion++;
+
+    showQuestion();
+
+}
+
+
+/* =========================
+   التنقل
+========================= */
+
+function updateNavigation() {
+
+    const previousBtn =
+        document.getElementById(
+            "previousBtn"
+        );
+
+
+    const nextBtn =
+        document.getElementById(
+            "nextBtn"
+        );
+
+
+    const submitBtn =
+        document.getElementById(
+            "submitBtn"
+        );
+
+
+    previousBtn.disabled =
+        currentQuestion === 0;
+
+
+    const lastQuestion =
+        currentQuestion ===
+        questions.length - 1;
+
+
+    nextBtn.classList.toggle(
+        "hidden",
+        lastQuestion
+    );
+
+
+    submitBtn.classList.toggle(
+        "hidden",
+        !lastQuestion
+    );
+
+}
+
+
+/* =========================
+   شريط التقدم
+========================= */
+
+function updateProgress() {
+
+    const total =
+        questions.length;
+
+
+    const answered =
+        Object.keys(
+            answers
+        ).length;
+
+
+    document.getElementById(
+        "progressText"
+    ).textContent =
+        `${answered} / ${total}`;
+
+
+    const percentage =
+        total > 0
+            ? (answered / total) * 100
+            : 0;
+
+
+    document.getElementById(
+        "progressFill"
+    ).style.width =
+        `${percentage}%`;
+
+}
+
+
+/* =========================
+   أرقام الأسئلة
+========================= */
+
+function renderQuestionNumbers() {
+
+    const container =
+        document.getElementById(
+            "questionNumbers"
+        );
+
+
+    container.innerHTML =
+        questions.map(
+            (question, index) => {
+
+                return `
+
+                    <button
+                        class="question-number-btn"
+                        id="questionNumberBtn-${index}"
+                        onclick="goToQuestion(${index})"
+                    >
+                        ${index + 1}
+                    </button>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+function updateQuestionNumbers() {
+
+    questions.forEach(
+        (question, index) => {
+
+            const button =
+                document.getElementById(
+                    `questionNumberBtn-${index}`
+                );
+
+
+            if (!button) {
+
+                return;
+
+            }
+
+
+            button.classList.toggle(
+                "current",
+                index === currentQuestion
+            );
+
+
+            const questionId = String(question.id);
+
+            button.classList.toggle(
+                "answered",
+                answers[questionId] !== undefined
+            );
+
+        }
+    );
+
+}
+
+
+function goToQuestion(index) {
+
+    if (
+        index < 0 ||
+        index >= questions.length
+    ) {
+
+        return;
+
+    }
+
+
+    currentQuestion =
+        index;
+
+
+    showQuestion();
+
+}
+
+
+/* =========================
+   المؤقت
+========================= */
+
+function startTimer() {
+
+    updateTimer();
+
+
+    timerInterval =
+        setInterval(
+            () => {
+
+                remainingSeconds--;
+
+
+                updateTimer();
+
+
+                if (
+                    remainingSeconds <= 0
+                ) {
+
+                    clearInterval(
+                        timerInterval
+                    );
+
+
+                    alert(
+                        "انتهى وقت الامتحان، سيتم تسليم الإجابات تلقائيًا."
+                    );
+
+
+                    submitExam(true);
+
+                }
+
+            },
+            1000
+        );
+
+}
+
+
+function updateTimer() {
+
+    const timer =
+        document.getElementById(
+            "timer"
+        );
+
+
+    if (
+        remainingSeconds < 0
+    ) {
+
+        remainingSeconds = 0;
+
+    }
+
+
+    const minutes =
+        Math.floor(
+            remainingSeconds / 60
+        );
+
+
+    const seconds =
+        remainingSeconds % 60;
+
+
+    timer.textContent =
+        `${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
+
+
+    timer.classList.toggle(
+        "warning",
+        remainingSeconds <= 300 &&
+        remainingSeconds > 60
+    );
+
+
+    timer.classList.toggle(
+        "danger",
+        remainingSeconds <= 60
+    );
+
+}
+
+
+/* =========================
+   تسليم الامتحان
+========================= */
+
+async function submitExam(
+    automatic = false
+) {
+
+    if (examSubmitted) {
+
+        return;
+
+    }
+
+
+    if (!automatic) {
+
+        const answered =
+            Object.keys(
+                answers
+            ).length;
+
+
+        if (
+            answered < questions.length
+        ) {
+
+            const remaining =
+                questions.length -
+                answered;
+
+
+            const confirmSubmit =
+                confirm(
+                    `لم تجب عن ${remaining} سؤال. هل تريد إنهاء الامتحان؟`
+                );
+
+
+            if (!confirmSubmit) {
+
+                return;
+
+            }
+
+        } else {
+
+            const confirmSubmit =
+                confirm(
+                    "هل تريد إنهاء الامتحان وتسليم إجاباتك؟"
+                );
+
+
+            if (!confirmSubmit) {
+
+                return;
+
+            }
+
+        }
+
+    }
+
+
+    examSubmitted = true;
+
+
+    if (timerInterval) {
+
+        clearInterval(
+            timerInterval
+        );
+
+    }
+
+
+    const studentName =
+        localStorage.getItem(
+            "studentName"
+        );
+
+
+    const studentCode =
+        localStorage.getItem(
+            "studentCode"
+        );
+
+
+    const classId =
+        examData.class_id;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/submit-exam",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        student_name:
+                            studentName,
+
+                        student_code:
+                            studentCode,
+
+                        class_id:
+                            Number(classId),
+
+                        exam_id:
+                            Number(examId),
+
+                        answers:
+                            answers
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "تعذر إرسال الامتحان"
+            );
+
+        }
+
+
+        showResult(
+            data
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        examSubmitted = false;
+
+
+        alert(
+            error.message ||
+            "حدث خطأ أثناء إرسال الامتحان."
+        );
+
+    }
+
+}
+
+
+/* =========================
+   عرض النتيجة
+========================= */
+
+function showResult(data) {
+
+    document
+        .getElementById("examArea")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("resultScreen")
+        .classList.remove("hidden");
+
+
+    const studentName =
+        localStorage.getItem("studentName") || "";
+
+    document.getElementById(
+        "resultStudent"
+    ).textContent =
+        `الطالب: ${studentName}`;
+
+
+    const percentage =
+        Number(data.percentage || 0);
+
+    const correct =
+        Number(data.correct || 0);
+
+    const wrong =
+        Number(data.wrong || 0);
+
+    const total =
+        Number(data.total || 0);
+
+
+    document.getElementById(
+        "percentage"
+    ).textContent =
+        `${percentage}%`;
+
+
+    document.getElementById(
+        "resultScore"
+    ).textContent =
+        `الدرجة: ${correct} / ${total}`;
+
+
+    document.getElementById(
+        "correctResult"
+    ).textContent =
+        correct;
+
+
+    document.getElementById(
+        "wrongResult"
+    ).textContent =
+        wrong;
+
+
+    document.getElementById(
+        "totalResult"
+    ).textContent =
+        total;
+
+
+    let message = "";
+
+    if (percentage >= 90) {
+        message = "ممتاز جدًا! أداء رائع 👏";
+    } else if (percentage >= 80) {
+        message = "ممتاز! استمر بهذا المستوى 💪";
+    } else if (percentage >= 65) {
+        message = "جيد جدًا! يمكنك الوصول إلى درجة أعلى.";
+    } else if (percentage >= 50) {
+        message = "جيد، لكن تحتاج إلى مزيد من المراجعة.";
+    } else {
+        message = "لا بأس، راجع الدرس وحاول مرة أخرى.";
+    }
+
+    document.getElementById(
+        "resultMessage"
+    ).textContent = message;
+
+}
+
+
+function retryExam() {
+
+    if (!examId) {
+        window.location.href = "exams.html";
+        return;
+    }
+
+    // إعادة حالة الامتحان من البداية بدون حذف بيانات الطالب.
+    answers = {};
+    currentQuestion = 0;
+    examSubmitted = false;
+
+    window.location.href =
+        `exam.html?exam_id=${encodeURIComponent(examId)}`;
+}
+
+
+/* =========================
+   شاشة الخطأ
+========================= */
+
+function showError(message) {
+
+    if (timerInterval) {
+
+        clearInterval(
+            timerInterval
+        );
+
+    }
+
+
+    document
+        .getElementById("loadingScreen")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("examArea")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("errorScreen")
+        .classList.remove("hidden");
+
+
+    document.getElementById(
+        "errorMessage"
+    ).textContent =
+        message;
+
+}
+
+
+/* =========================
+   تشغيل
+========================= */
+
+loadExam();
+
+</script>
+
+
+</body>
+
+</html>

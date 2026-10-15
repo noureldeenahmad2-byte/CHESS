@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الامتحانات | بريق نور</title>
+
+<style>
+*{box-sizing:border-box}
+:root{
+  --navy:#102a43;
+  --navy2:#17365d;
+  --gold:#c89b3c;
+  --bg:#f4f7fb;
+  --text:#243b53;
+  --muted:#7b8794;
+  --border:#e3e9ef;
+  --white:#fff;
+  --success:#16865b;
+}
+body{
+  margin:0;
+  font-family:"Segoe UI",Tahoma,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 90% 0%,rgba(200,155,60,.12),transparent 28%),
+    linear-gradient(180deg,#f8fafc 0%,#eef3f8 100%);
+  color:var(--text);
+  min-height:100vh;
+}
+button,select{font:inherit}
+.topbar{
+  background:linear-gradient(135deg,var(--navy),var(--navy2));
+  color:#fff;
+  padding:18px 24px;
+  box-shadow:0 5px 22px rgba(16,42,67,.18);
+}
+.topbar-inner{
+  max-width:1180px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+.logo{
+  width:50px;height:50px;
+  border-radius:15px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.18);
+  font-size:25px;
+}
+.brand-title{font-size:20px;font-weight:900}
+.brand-sub{font-size:12px;opacity:.78;margin-top:3px}
+.back-btn{
+  border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  padding:10px 15px;
+  border-radius:11px;
+  cursor:pointer;
+  font-weight:800;
+}
+.container{max-width:1180px;margin:0 auto;padding:30px 18px 50px}
+.hero{
+  text-align:center;
+  padding:12px 10px 25px;
+}
+.hero-badge{
+  display:inline-flex;
+  padding:7px 13px;
+  border-radius:30px;
+  background:#fff;
+  border:1px solid var(--border);
+  color:var(--gold);
+  font-size:12px;
+  font-weight:900;
+  box-shadow:0 5px 18px rgba(16,42,67,.05);
+}
+.hero h1{margin:14px 0 8px;color:var(--navy);font-size:34px}
+.hero p{margin:0;color:var(--muted);font-size:14px}
+.control-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 9px 25px rgba(16,42,67,.06);
+  margin-bottom:22px;
+}
+.control-row{
+  display:flex;
+  align-items:end;
+  gap:14px;
+}
+.control-group{flex:1}
+.control-group label{
+  display:block;
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:8px;
+  color:var(--navy);
+}
+select{
+  width:100%;
+  border:1px solid #d5dee8;
+  background:#fff;
+  border-radius:12px;
+  padding:12px 14px;
+  color:var(--text);
+  outline:none;
+}
+select:focus{border-color:var(--navy2);box-shadow:0 0 0 3px rgba(23,54,93,.08)}
+.refresh-btn{
+  border:1px solid var(--navy2);
+  background:var(--navy2);
+  color:#fff;
+  padding:12px 18px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:900;
+  white-space:nowrap;
+}
+.status{
+  display:none;
+  margin:14px 0 0;
+  padding:11px 14px;
+  border-radius:11px;
+  font-size:13px;
+}
+.status.show{display:block}
+.status.error{background:#fff0f0;color:#a12a2a;border:1px solid #f3caca}
+.status.info{background:#eef5ff;color:#24578d;border:1px solid #d5e5f7}
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:15px;
+  margin:25px 0 14px;
+}
+.section-head h2{margin:0;color:var(--navy);font-size:21px}
+.count{color:var(--muted);font-size:12px}
+.exam-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px;
+}
+.exam-card{
+  position:relative;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 9px 26px rgba(16,42,67,.065);
+  transition:.2s ease;
+}
+.exam-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 15px 32px rgba(16,42,67,.11);
+}
+.exam-top{
+  height:8px;
+  background:linear-gradient(90deg,var(--navy),var(--gold));
+}
+.exam-body{padding:19px}
+.exam-icon{
+  width:46px;height:46px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:14px;
+  background:#eef3f8;
+  font-size:22px;
+  margin-bottom:13px;
+}
+.exam-title{
+  color:var(--navy);
+  font-size:18px;
+  font-weight:900;
+  line-height:1.45;
+  min-height:52px;
+}
+.exam-class{font-size:12px;color:var(--muted);margin-top:5px}
+.exam-meta{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin:17px 0;
+}
+.meta{
+  background:#f7f9fc;
+  border:1px solid #edf1f5;
+  border-radius:11px;
+  padding:10px;
+}
+.meta-label{font-size:10px;color:var(--muted);margin-bottom:3px}
+.meta-value{font-weight:900;color:var(--navy);font-size:13px}
+.start-btn{
+  width:100%;
+  border:0;
+  background:var(--navy2);
+  color:#fff;
+  border-radius:12px;
+  padding:12px;
+  cursor:pointer;
+  font-weight:900;
+}
+.start-btn:hover{background:#102a43}
+.start-btn:disabled{background:#b5c0cb;cursor:not-allowed}
+.empty{
+  grid-column:1/-1;
+  background:#fff;
+  border:1px dashed #ccd6e0;
+  border-radius:18px;
+  padding:45px 20px;
+  text-align:center;
+  color:var(--muted);
+}
+.empty-icon{font-size:42px;margin-bottom:10px}
+.loading{
+  grid-column:1/-1;
+  text-align:center;
+  padding:45px;
+  color:var(--muted);
+}
+.footer{
+  text-align:center;
+  padding:20px;
+  color:#8a96a6;
+  font-size:11px;
+}
+@media(max-width:900px){
+  .exam-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:620px){
+  .topbar{padding:14px 15px}
+  .topbar-inner{align-items:flex-start}
+  .brand-title{font-size:16px}
+  .brand-sub{font-size:10px}
+  .logo{width:43px;height:43px}
+  .back-btn{font-size:12px;padding:9px 11px}
+  .container{padding:22px 12px 40px}
+  .hero h1{font-size:27px}
+  .control-row{flex-direction:column;align-items:stretch}
+  .exam-grid{grid-template-columns:1fr}
+}
+
+/* ===== تصميم كمبيوتر جديد - صفحة الامتحانات ===== */
+@media (min-width: 901px){
+
+  .topbar{
+    padding:10px 5%;
+    background:linear-gradient(135deg,#062f5f,#07509a);
+    box-shadow:0 4px 22px rgba(0,35,75,.18);
+  }
+
+  .topbar-inner{
+    max-width:1450px;
+    min-height:66px;
+    margin:auto;
+  }
+
+  .brand{
+    gap:12px;
+  }
+
+  .logo{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#e3a51b,#ffd45a);
+    border:0;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+    font-size:25px;
+  }
+
+  .brand-title{
+    font-size:22px;
+    font-weight:900;
+  }
+
+  .brand-sub{
+    margin-top:4px;
+    font-size:12px;
+    color:#dbeaff;
+    opacity:1;
+  }
+
+  .back-btn{
+    min-width:120px;
+    padding:12px 20px;
+    border:0;
+    border-radius:10px;
+    background:#e3a51b;
+    color:#fff;
+    font-size:15px;
+    font-weight:900;
+    box-shadow:0 4px 12px rgba(0,0,0,.15);
+    transition:transform .25s ease,filter .25s ease;
+  }
+
+  .back-btn:hover{
+    transform:translateY(-2px);
+    filter:brightness(1.07);
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="logo">📚</div>
+      <div>
+        <div class="brand-title">بريق نور</div>
+        <div class="brand-sub">الدراسات الاجتماعية</div>
+      </div>
+    </div>
+    <button class="back-btn" onclick="goHome()">الرئيسية</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <div class="hero-badge">منصة الاختبارات الإلكترونية</div>
+    <h1>اختر الامتحان</h1>
+    <p>اختر صفك الدراسي ثم اختر الامتحان الذي تريد أداءه.</p>
+  </section>
+
+  <section class="control-card">
+    <div class="control-row">
+      <div class="control-group">
+        <label for="classSelect">الصف الدراسي</label>
+        <select id="classSelect" onchange="loadExams()">
+          <option value="">جاري تحميل الصفوف...</option>
+        </select>
+      </div>
+      <button class="refresh-btn" onclick="loadExams()">تحديث الامتحانات</button>
+    </div>
+    <div id="status" class="status"></div>
+  </section>
+
+  <div class="section-head">
+    <h2>الامتحانات المتاحة</h2>
+    <div id="examCount" class="count">0 امتحان</div>
+  </div>
+
+  <section id="examGrid" class="exam-grid">
+    <div class="loading">جاري تحميل الامتحانات...</div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  © بريق نور — للأستاذ أنور أبو ستيت — الدراسات الاجتماعية
+</footer>
+
+<script>
+function escapeHtml(value){
+  if(value === null || value === undefined) return "";
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function goHome(){
+  window.location.href = "index.html";
+}
+
+function showStatus(message,type="info"){
+  const el=document.getElementById("status");
+  el.textContent=message;
+  el.className="status show "+type;
+}
+
+function hideStatus(){
+  document.getElementById("status").className="status";
+}
+
+async function loadClasses(){
+  const select=document.getElementById("classSelect");
+
+  try{
+    const response=await fetch("/api/classes");
+    if(!response.ok) throw new Error("تعذر تحميل الصفوف");
+
+    const classes=await response.json();
+
+    if(!Array.isArray(classes) || !classes.length){
+      select.innerHTML='<option value="">لا توجد صفوف</option>';
+      return;
+    }
+
+    const savedClass=localStorage.getItem("studentClassId");
+
+    select.innerHTML='<option value="">اختر الصف الدراسي</option>'+
+      classes.map(c=>`
+        <option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>
+      `).join("");
+
+    if(savedClass && classes.some(c=>String(c.id)===String(savedClass))){
+      select.value=savedClass;
+    }else{
+      const oldClass=localStorage.getItem("studentClass");
+      if(oldClass){
+        const found=classes.find(c=>String(c.name)===String(oldClass));
+        if(found) select.value=found.id;
+      }
+    }
+
+    if(select.value){
+      await loadExams();
+    }else{
+      renderEmpty("اختر الصف الدراسي لعرض الامتحانات.");
+    }
+
+  }catch(error){
+    select.innerHTML='<option value="">تعذر تحميل الصفوف</option>';
+    showStatus(error.message || "حدث خطأ أثناء تحميل الصفوف","error");
+    renderEmpty("تعذر تحميل الصفوف. تأكد أن السيرفر يعمل.");
+  }
+}
+
+async function loadExams(){
+  const select=document.getElementById("classSelect");
+  const classId=select.value;
+  const grid=document.getElementById("examGrid");
+
+  if(!classId){
+    localStorage.removeItem("studentClassId");
+    renderEmpty("اختر الصف الدراسي لعرض الامتحانات.");
+    document.getElementById("examCount").textContent="0 امتحان";
+    return;
+  }
+
+  localStorage.setItem("studentClassId",classId);
+
+  const selectedOption=select.options[select.selectedIndex];
+  const className=selectedOption ? selectedOption.textContent : "";
+  localStorage.setItem("studentClass",className);
+
+  hideStatus();
+  grid.innerHTML='<div class="loading">جاري تحميل الامتحانات...</div>';
+
+  try{
+    const response=await fetch("/api/exams/"+encodeURIComponent(classId));
+    if(!response.ok) throw new Error("تعذر تحميل الامتحانات");
+
+    const exams=await response.json();
+    const list=Array.isArray(exams) ? exams : [];
+
+    document.getElementById("examCount").textContent =
+      list.length + (list.length===1 ? " امتحان" : " امتحانات");
+
+    if(!list.length){
+      renderEmpty("لا توجد امتحانات منشورة لهذا الصف حاليًا.");
+      return;
+    }
+
+    grid.innerHTML=list.map(exam=>{
+      const questions=Number(exam.question_count||0);
+      const duration=Number(exam.duration||0);
+
+      return `
+        <article class="exam-card">
+          <div class="exam-top"></div>
+          <div class="exam-body">
+            <div class="exam-icon">📝</div>
+
+            <div class="exam-title">${escapeHtml(exam.title)}</div>
+            <div class="exam-class">${escapeHtml(exam.class_name || className)}</div>
+
+            <div class="exam-meta">
+              <div class="meta">
+                <div class="meta-label">عدد الأسئلة</div>
+                <div class="meta-value">${questions} سؤال</div>
+              </div>
+              <div class="meta">
+                <div class="meta-label">المدة</div>
+                <div class="meta-value">${duration} دقيقة</div>
+              </div>
+            </div>
+
+            <button class="start-btn"
+              onclick="selectExam(${Number(exam.id)})"
+              ${questions<=0 ? "disabled" : ""}>
+              ${questions<=0 ? "الامتحان بلا أسئلة" : "بدء الامتحان"}
+            </button>
+          </div>
+        </article>
+      `;
+    }).join("");
+
+  }catch(error){
+    console.error(error);
+    document.getElementById("examCount").textContent="0 امتحان";
+    showStatus(error.message || "حدث خطأ أثناء تحميل الامتحانات","error");
+    renderEmpty("تعذر تحميل الامتحانات. حاول مرة أخرى.");
+  }
+}
+
+function renderEmpty(message){
+  document.getElementById("examGrid").innerHTML=`
+    <div class="empty">
+      <div class="empty-icon">📋</div>
+      <div>${escapeHtml(message)}</div>
+    </div>
+  `;
+}
+
+function selectExam(examId){
+  if(!examId) return;
+
+  localStorage.setItem("selectedExamId",String(examId));
+
+  /*
+    نرسل الطالب أولًا إلى صفحة بيانات الطالب.
+    student.html يمكنه قراءة selectedExamId وبدء الامتحان بعد إدخال البيانات.
+  */
+  window.location.href="student.html?exam_id="+encodeURIComponent(examId);
+}
+
+document.addEventListener("DOMContentLoaded",loadClasses);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بيانات الطالب | بريق نور</title>
+
+<style>
+*{box-sizing:border-box}
+:root{
+  --navy:#102a43;
+  --navy2:#17365d;
+  --gold:#c89b3c;
+  --bg:#f4f7fb;
+  --text:#243b53;
+  --muted:#7b8794;
+  --border:#e2e8f0;
+  --danger:#b42318;
+}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:"Segoe UI",Tahoma,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 10% 0%,rgba(200,155,60,.12),transparent 28%),
+    linear-gradient(180deg,#f8fafc,#eef3f8);
+}
+.topbar{
+  background:linear-gradient(135deg,var(--navy),var(--navy2));
+  color:#fff;
+  padding:17px 22px;
+  box-shadow:0 6px 24px rgba(16,42,67,.17);
+}
+.topbar-inner{
+  max-width:1080px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:48px;height:48px;
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.18);
+  font-size:23px;
+}
+.brand-title{font-size:19px;font-weight:900}
+.brand-sub{font-size:11px;opacity:.76;margin-top:2px}
+.home-btn{
+  border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  padding:9px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:800;
+}
+.container{max-width:1080px;margin:auto;padding:35px 18px 50px}
+.page-head{text-align:center;margin-bottom:24px}
+.badge{
+  display:inline-block;
+  background:#fff;
+  border:1px solid var(--border);
+  color:var(--gold);
+  border-radius:30px;
+  padding:7px 13px;
+  font-size:12px;
+  font-weight:900;
+}
+.page-head h1{margin:13px 0 7px;color:var(--navy);font-size:32px}
+.page-head p{margin:0;color:var(--muted);font-size:14px}
+.layout{
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);
+  gap:20px;
+  align-items:start;
+}
+.card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:19px;
+  padding:23px;
+  box-shadow:0 10px 30px rgba(16,42,67,.07);
+}
+.card-title{
+  margin:0 0 18px;
+  color:var(--navy);
+  font-size:19px;
+  font-weight:900;
+}
+.form-group{margin-bottom:17px}
+label{
+  display:block;
+  margin-bottom:7px;
+  color:#334e68;
+  font-size:13px;
+  font-weight:900;
+}
+input{
+  width:100%;
+  border:1px solid #d4dee8;
+  border-radius:12px;
+  padding:13px 14px;
+  outline:none;
+  color:var(--text);
+  background:#fff;
+  font:inherit;
+}
+input:focus{
+  border-color:var(--navy2);
+  box-shadow:0 0 0 3px rgba(23,54,93,.08);
+}
+.hint{font-size:11px;color:#8a96a6;margin-top:6px}
+.start-btn{
+  width:100%;
+  border:0;
+  border-radius:13px;
+  padding:14px;
+  background:linear-gradient(135deg,var(--navy2),var(--navy));
+  color:#fff;
+  cursor:pointer;
+  font-weight:900;
+  font-size:15px;
+  box-shadow:0 7px 18px rgba(16,42,67,.16);
+}
+.start-btn:hover{transform:translateY(-1px)}
+.start-btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.back-link{
+  width:100%;
+  margin-top:10px;
+  border:1px solid #d5dee8;
+  border-radius:12px;
+  padding:11px;
+  background:#fff;
+  color:var(--navy2);
+  cursor:pointer;
+  font-weight:800;
+}
+.exam-preview{
+  background:linear-gradient(145deg,#f8fafc,#eef3f8);
+  border:1px solid #e1e8ef;
+  border-radius:15px;
+  padding:18px;
+}
+.preview-icon{
+  width:50px;height:50px;
+  border-radius:15px;
+  background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;
+  box-shadow:0 5px 16px rgba(16,42,67,.06);
+  margin-bottom:13px;
+}
+.preview-title{
+  color:var(--navy);
+  font-size:20px;
+  font-weight:900;
+  line-height:1.45;
+}
+.preview-class{color:var(--muted);font-size:12px;margin-top:5px}
+.meta-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:18px;
+}
+.meta{
+  background:#fff;
+  border:1px solid #e5ebf1;
+  border-radius:11px;
+  padding:11px;
+}
+.meta-label{font-size:10px;color:var(--muted);margin-bottom:4px}
+.meta-value{font-size:13px;color:var(--navy);font-weight:900}
+.notice{
+  margin-top:17px;
+  padding:12px 13px;
+  border-radius:11px;
+  background:#fff9e9;
+  border:1px solid #f2dfad;
+  color:#795b15;
+  font-size:12px;
+  line-height:1.7;
+}
+.status{
+  display:none;
+  padding:11px 13px;
+  border-radius:11px;
+  margin-bottom:15px;
+  font-size:13px;
+}
+.status.show{display:block}
+.status.error{background:#fff0f0;color:var(--danger);border:1px solid #f2c9c5}
+.status.info{background:#eef5ff;color:#24578d;border:1px solid #d5e5f7}
+.loading{
+  text-align:center;
+  padding:45px 10px;
+  color:var(--muted);
+}
+.hidden{display:none!important}
+.footer{text-align:center;color:#8a96a6;font-size:11px;padding:15px}
+@media(max-width:780px){
+  .layout{grid-template-columns:1fr}
+}
+@media(max-width:550px){
+  .container{padding:24px 12px 40px}
+  .page-head h1{font-size:27px}
+  .topbar{padding:13px 14px}
+  .brand-title{font-size:16px}
+  .brand-sub{font-size:10px}
+  .logo{width:42px;height:42px}
+  .home-btn{font-size:11px;padding:8px 10px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="logo">📚</div>
+      <div>
+        <div class="brand-title">بريق نور</div>
+        <div class="brand-sub">الدراسات الاجتماعية</div>
+      </div>
+    </div>
+    <button class="home-btn" onclick="goHome()">الرئيسية</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="page-head">
+    <div class="badge">بيانات دخول الامتحان</div>
+    <h1>بيانات الطالب</h1>
+    <p>اكتب بياناتك بدقة قبل بدء الامتحان.</p>
+  </section>
+
+  <div id="loadingBox" class="card loading">
+    جاري تحميل بيانات الامتحان...
+  </div>
+
+  <div id="mainContent" class="layout hidden">
+
+    <section class="card">
+      <h2 class="card-title">👨‍🎓 أدخل بياناتك</h2>
+
+      <div id="status" class="status"></div>
+
+      <form id="studentForm" onsubmit="startExam(event)">
+
+        <div class="form-group">
+          <label for="studentName">اسم الطالب</label>
+          <input
+            id="studentName"
+            type="text"
+            maxlength="100"
+            autocomplete="name"
+            placeholder="اكتب اسمك بالكامل"
+            required
+          >
+          <div class="hint">يفضل كتابة الاسم رباعيًا كما هو في المدرسة.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="studentCode">كود الطالب</label>
+          <input
+            id="studentCode"
+            type="text"
+            maxlength="50"
+            autocomplete="off"
+            placeholder="اكتب كود الطالب"
+            required
+          >
+          <div class="hint">يمكنك استخدام الكود الذي يحدده المدرس لك.</div>
+        </div>
+
+        <button id="startButton" class="start-btn" type="submit">
+          بدء الامتحان
+        </button>
+
+        <button class="back-link" type="button" onclick="backToExams()">
+          العودة لاختيار امتحان آخر
+        </button>
+
+      </form>
+    </section>
+
+    <aside class="card">
+      <h2 class="card-title">📝 بيانات الامتحان</h2>
+
+      <div class="exam-preview">
+        <div class="preview-icon">📋</div>
+
+        <div id="examTitle" class="preview-title">-</div>
+        <div id="examClass" class="preview-class">-</div>
+
+        <div class="meta-grid">
+          <div class="meta">
+            <div class="meta-label">عدد الأسئلة</div>
+            <div id="questionCount" class="meta-value">-</div>
+          </div>
+          <div class="meta">
+            <div class="meta-label">مدة الامتحان</div>
+            <div id="duration" class="meta-value">-</div>
+          </div>
+        </div>
+
+        <div class="notice">
+          بعد الضغط على «بدء الامتحان» سيبدأ احتساب الوقت، وستنتقل مباشرة إلى صفحة الأسئلة.
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</main>
+
+<footer class="footer">
+  © بريق نور — للأستاذ أنور أبو ستيت — الدراسات الاجتماعية
+</footer>
+
+<script>
+let currentExam = null;
+
+function goHome(){
+  window.location.href="index.html";
+}
+
+function backToExams(){
+  window.location.href="exams.html";
+}
+
+function escapeHtml(value){
+  if(value===null || value===undefined) return "";
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function showStatus(message,type="info"){
+  const el=document.getElementById("status");
+  el.textContent=message;
+  el.className="status show "+type;
+}
+
+function getExamId(){
+  const params=new URLSearchParams(window.location.search);
+  const fromUrl=params.get("exam_id");
+
+  if(fromUrl){
+    localStorage.setItem("selectedExamId",fromUrl);
+    return fromUrl;
+  }
+
+  return localStorage.getItem("selectedExamId");
+}
+
+async function loadExam(){
+  const examId=getExamId();
+
+  if(!examId){
+    window.location.href="exams.html";
+    return;
+  }
+
+  try{
+    const response=await fetch("/api/exam/"+encodeURIComponent(examId));
+
+    if(!response.ok){
+      throw new Error("الامتحان غير موجود أو لم يعد متاحًا.");
+    }
+
+    const data=await response.json();
+
+    /*
+      الـAPI قد يعيد البيانات داخل exam أو يعيد الكائن مباشرة،
+      لذلك نتعامل مع الحالتين.
+    */
+    const exam=data.exam || data;
+
+    if(!exam || !exam.id){
+      throw new Error("تعذر قراءة بيانات الامتحان.");
+    }
+
+    currentExam=exam;
+
+    const questions=Array.isArray(data.questions)
+      ? data.questions
+      : (Array.isArray(exam.questions) ? exam.questions : []);
+
+    document.getElementById("examTitle").textContent =
+      exam.title || "امتحان الدراسات الاجتماعية";
+
+    document.getElementById("examClass").textContent =
+      exam.class_name || localStorage.getItem("studentClass") || "الصف الدراسي";
+
+    document.getElementById("questionCount").textContent =
+      questions.length+" سؤال";
+
+    const duration=Number(exam.duration || 0);
+    document.getElementById("duration").textContent =
+      duration>0 ? duration+" دقيقة" : "غير محددة";
+
+    document.getElementById("loadingBox").classList.add("hidden");
+    document.getElementById("mainContent").classList.remove("hidden");
+
+    // استعادة البيانات التي كتبها الطالب سابقًا على نفس الجهاز.
+    const savedName=localStorage.getItem("studentName");
+    const savedCode=localStorage.getItem("studentCode");
+
+    if(savedName) document.getElementById("studentName").value=savedName;
+    if(savedCode) document.getElementById("studentCode").value=savedCode;
+
+  }catch(error){
+    document.getElementById("loadingBox").innerHTML=`
+      <div style="font-size:34px;margin-bottom:10px">⚠️</div>
+      <div>${escapeHtml(error.message || "حدث خطأ أثناء تحميل الامتحان.")}</div>
+      <button class="back-link" style="max-width:260px;margin:18px auto 0"
+        onclick="backToExams()">العودة للامتحانات</button>
+    `;
+  }
+}
+
+function startExam(event){
+  event.preventDefault();
+
+  if(!currentExam || !currentExam.id){
+    showStatus("لم يتم تحميل بيانات الامتحان بعد.","error");
+    return;
+  }
+
+  const name=document.getElementById("studentName").value.trim();
+  const code=document.getElementById("studentCode").value.trim();
+
+  if(name.length<2){
+    showStatus("من فضلك اكتب اسم الطالب بشكل صحيح.","error");
+    return;
+  }
+
+  if(code.length<1){
+    showStatus("من فضلك اكتب كود الطالب.","error");
+    return;
+  }
+
+  localStorage.setItem("studentName",name);
+  localStorage.setItem("studentCode",code);
+  localStorage.setItem("studentClassId",
+    localStorage.getItem("studentClassId") || String(currentExam.class_id || "")
+  );
+  localStorage.setItem("studentClass",
+    localStorage.getItem("studentClass") || String(currentExam.class_name || "")
+  );
+  localStorage.setItem("selectedExamId",String(currentExam.id));
+
+  /*
+    نحفظ وقت بداية الامتحان هنا.
+    exam.html يستطيع استخدامه لو احتاج لاستكمال المؤقت.
+  */
+  localStorage.setItem("examStartTime",String(Date.now()));
+
+  const button=document.getElementById("startButton");
+  button.disabled=true;
+  button.textContent="جاري بدء الامتحان...";
+
+  window.location.href="exam.html?exam_id="+encodeURIComponent(currentExam.id);
+}
+
+document.addEventListener("DOMContentLoaded",loadExam);
+</script>
+
+</body>
+</html>
+
