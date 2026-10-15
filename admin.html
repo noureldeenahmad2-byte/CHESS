@@ -1056,10 +1056,6 @@ th{background:#f8fafc;color:#334155}
 .student-level-follow{color:#92400e;background:#fef3c7;border-color:#fde68a}
 .student-level-support{color:#991b1b;background:#fee2e2;border-color:#fecaca}
 .student-level-none{color:#475569;background:#f1f5f9;border-color:#e2e8f0}
-/* ===== صفحة الأوائل المستقلة ===== */
-.leaderboard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:18px}
-.leaderboard-card{background:linear-gradient(145deg,#fff,#fcfaf5);border:1px solid #ead9ad;border-top:3px solid #c89b3c;border-radius:16px;padding:16px;box-shadow:0 6px 18px rgba(15,35,64,.06)}
-.leaderboard-rank{font-size:25px;font-weight:900;color:#c89b3c}.leaderboard-name{font-weight:900;color:#102a43;font-size:17px;margin:5px 0}.leaderboard-meta{color:#64748b;font-size:12px}.leaderboard-score{font-size:23px;font-weight:900;color:#17365d;margin-top:8px}
 </style>
 </head>
 <body>
@@ -1094,7 +1090,6 @@ th{background:#f8fafc;color:#334155}
       <button class="nav-btn" data-page="questions" onclick="showPage('questions')">❓ الأسئلة</button>
       <button class="nav-btn" data-page="results" onclick="showPage('results')">🏆 النتائج</button>
       <button class="nav-btn" data-page="students" onclick="showPage('students')">👨‍🎓 حسابات الطلاب</button>
-      <button class="nav-btn" data-page="leaderboard" onclick="showPage('leaderboard')">🥇 الأوائل</button>
     </aside>
 
     <main class="content">
@@ -1264,13 +1259,6 @@ th{background:#f8fafc;color:#334155}
         <div class="card">
           <h3>إضافة سؤال</h3>
           <div class="field">
-            <label>نوع السؤال</label>
-            <select id="questionType" onchange="changeQuestionType()">
-              <option value="multiple_choice">اختيار من متعدد</option>
-              <option value="true_false">صح أو خطأ</option>
-            </select>
-          </div>
-          <div class="field">
             <label>السؤال</label>
             <textarea id="questionText" rows="4" style="width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;resize:vertical" placeholder="اكتب السؤال هنا"></textarea>
           </div>
@@ -1297,20 +1285,61 @@ th{background:#f8fafc;color:#334155}
       </section>
 
       <section id="page-students" class="hidden">
-        <div class="page-title"><h2>👨‍🎓 إدارة الطلاب</h2><button class="btn btn-primary" onclick="loadStudents()">تحديث</button></div>
-        <div class="card"><h3>قائمة الطلاب</h3><div class="table-wrap"><table>
-          <thead><tr><th>#</th><th>اسم الطالب</th><th>الكود</th><th>الصف</th><th>النقاط</th><th>المستوى</th><th>الإجراءات</th></tr></thead>
-          <tbody id="studentAccountsBody"><tr><td colspan="7">جاري تحميل الطلاب...</td></tr></tbody>
-        </table></div><div id="studentAccountsMessage" class="muted" style="margin-top:12px"></div></div>
-        <input type="hidden" id="studentAccountSearch" value=""><select id="studentAccountClass" class="hidden"><option value="">كل الصفوف</option></select><select id="studentAccountLevel" class="hidden"><option value=""></option></select><select id="studentAccountSort" class="hidden"><option value="average_desc"></option></select><span id="accountsTotal" class="hidden"></span><span id="accountsShown" class="hidden"></span>
-      </section>
-      <section id="page-leaderboard" class="hidden">
-        <div class="page-title"><h2>🥇 لوحة الأوائل</h2><button class="btn btn-primary" onclick="loadLeaderboardPage()">تحديث</button></div>
+        <div class="page-title">
+          <h2>حسابات الطلاب</h2>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="loadStudents()">تحديث القائمة</button>
+            <button class="btn btn-primary" onclick="exportStudentsCsv()">تنزيل كشف الطلاب والدرجات CSV</button>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="muted">إجمالي الحسابات</div><div class="num" id="accountsTotal">0</div></div>
+          <div class="stat"><div class="muted">الحسابات المعروضة</div><div class="num" id="accountsShown">0</div></div>
+        </div>
         <div class="card">
-          <div class="notice">ترتيب مستقل لأفضل الطلاب اعتمادًا على بيانات لوحة الأوائل، مع محاولة استخدام النتائج المسجلة كبديل عند تعذر المسار.</div>
-          <div id="leaderboardPageList" class="leaderboard-grid"><div class="empty">اضغط تحديث لعرض الأوائل.</div></div>
+          <div class="notice">يمكنك البحث باسم الطالب أو اسم المستخدم، وتصفية القائمة حسب الصف. كلمات المرور لا تظهر في هذه الصفحة.</div>
+          <div class="filters">
+            <div class="field" style="margin:0">
+              <label for="studentAccountSearch">بحث عن طالب</label>
+              <input id="studentAccountSearch" placeholder="اسم الطالب أو اسم المستخدم" oninput="loadStudentsDebounced()">
+            </div>
+            <div class="field" style="margin:0">
+              <label for="studentAccountClass">الصف الدراسي</label>
+              <select id="studentAccountClass" onchange="loadStudents()"><option value="">كل الصفوف</option></select>
+            </div>
+            <div class="field" style="margin:0">
+              <label for="studentAccountLevel">مستوى الطالب</label>
+              <select id="studentAccountLevel" onchange="loadStudents()">
+                <option value="">كل المستويات</option>
+                <option value="excellent">ممتاز</option>
+                <option value="good">جيد</option>
+                <option value="follow">يحتاج متابعة</option>
+                <option value="support">يحتاج دعمًا</option>
+                <option value="none">لم يؤدِ امتحانًا</option>
+              </select>
+            </div>
+            <div class="field" style="margin:0">
+              <label for="studentAccountSort">ترتيب الطلاب</label>
+              <select id="studentAccountSort" onchange="loadStudents()">
+                <option value="average_desc">الأعلى متوسطًا أولًا</option>
+                <option value="results_desc">الأكثر أداءً (عدد النتائج)</option>
+                <option value="name_asc">الاسم أبجديًا</option>
+                <option value="activity_desc">الأحدث نشاطًا</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>#</th><th>اسم الطالب</th><th>اسم المستخدم</th><th>الصف</th><th>عدد النتائج</th><th>متوسط الدرجات</th><th>مؤشر المستوى</th><th>تاريخ التسجيل</th><th>آخر نشاط</th><th>الملف التفصيلي</th></tr></thead>
+              <tbody id="studentAccountsBody"><tr><td colspan="10">اضغط «تحديث القائمة» لتحميل الحسابات.</td></tr></tbody>
+            </table>
+          </div>
+          <div id="studentAccountsMessage" class="muted" style="margin-top:12px"></div>
         </div>
       </section>
+
       <section id="page-results" class="hidden">
         <div class="page-title">
           <h2>نتائج الطلاب</h2>
@@ -1413,18 +1442,6 @@ th{background:#f8fafc;color:#334155}
   </div>
 </div>
 
-
-<div id="editStudentModal" class="modal hidden"><div class="modal-box" style="width:min(500px,100%)">
- <div class="modal-head"><h2>✏️ تعديل بيانات الطالب</h2><button class="close" onclick="closeEditStudent()">×</button></div>
- <input id="editStudentId" type="hidden">
- <div class="field"><label>اسم الطالب</label><input id="editStudentName"></div>
- <div class="field"><label>كود الطالب</label><input id="editStudentCode"></div>
- <div class="field"><label>الصف الدراسي</label><select id="editStudentClass"></select></div>
- <div class="field"><label>النقاط</label><input id="editStudentPoints" type="number" min="0"></div>
- <div class="field"><label>المستوى</label><input id="editStudentLevel" type="number" min="1"></div>
- <div class="actions"><button class="btn btn-primary" onclick="saveStudentEdit()">💾 حفظ التعديلات</button><button class="btn btn-secondary" onclick="closeEditStudent()">إلغاء</button></div>
- <div id="editStudentMessage"></div>
-</div></div>
 <script>
 let classes = [];
 let exams = [];
@@ -1610,41 +1627,9 @@ async function deleteExam(id) {
   } catch(e) { alert(e.message); }
 }
 
-function changeQuestionType() {
-  const type = document.getElementById("questionType")?.value || "multiple_choice";
-  const optionA = document.getElementById("optionA");
-  const optionB = document.getElementById("optionB");
-  const optionC = document.getElementById("optionC");
-  const optionD = document.getElementById("optionD");
-  const correct = document.getElementById("correctAnswer");
-  if (!optionA || !optionB || !optionC || !optionD || !correct) return;
-
-  const optionCField = optionC.closest(".field");
-  const optionDField = optionD.closest(".field");
-  if (type === "true_false") {
-    optionA.value = "صح";
-    optionB.value = "خطأ";
-    optionA.readOnly = true;
-    optionB.readOnly = true;
-    optionC.value = "";
-    optionD.value = "";
-    optionCField?.classList.add("hidden");
-    optionDField?.classList.add("hidden");
-    correct.innerHTML = '<option value="a">صح</option><option value="b">خطأ</option>';
-  } else {
-    optionA.readOnly = false;
-    optionB.readOnly = false;
-    if (optionA.value === "صح" && optionB.value === "خطأ") { optionA.value = ""; optionB.value = ""; }
-    optionCField?.classList.remove("hidden");
-    optionDField?.classList.remove("hidden");
-    correct.innerHTML = '<option value="a">أ</option><option value="b">ب</option><option value="c">ج</option><option value="d">د</option>';
-  }
-}
-
 async function addQuestion() {
   const exam_id = document.getElementById("questionExam").value;
   const question = document.getElementById("questionText").value.trim();
-  const question_type = document.getElementById("questionType")?.value || "multiple_choice";
   const option_a = document.getElementById("optionA").value.trim();
   const option_b = document.getElementById("optionB").value.trim();
   const option_c = document.getElementById("optionC").value.trim();
@@ -1653,9 +1638,8 @@ async function addQuestion() {
   const box = document.getElementById("questionMessage");
   box.innerHTML = "";
 
-  const missingOptions = question_type === "true_false" ? (!option_a || !option_b) : (!option_a || !option_b || !option_c || !option_d);
-  if (!exam_id || !question || missingOptions) {
-    box.innerHTML = '<div class="error">اختر الامتحان وأكمل السؤال والاختيارات المطلوبة.</div>';
+  if (!exam_id || !question || !option_a || !option_b || !option_c || !option_d) {
+    box.innerHTML = '<div class="error">اختر الامتحان وأكمل السؤال وجميع الاختيارات.</div>';
     return;
   }
 
@@ -1663,16 +1647,11 @@ async function addQuestion() {
     await api("/api/admin/questions", {
       method:"POST",
       body:JSON.stringify({
-        exam_id:Number(exam_id), question, option_a, option_b,
-        option_c: question_type === "true_false" ? "" : option_c,
-        option_d: question_type === "true_false" ? "" : option_d,
-        correct_answer, question_type
+        exam_id:Number(exam_id), question, option_a, option_b, option_c, option_d, correct_answer
       })
     });
     document.getElementById("questionText").value = "";
     ["optionA","optionB","optionC","optionD"].forEach(id => document.getElementById(id).value="");
-    document.getElementById("questionType").value = "multiple_choice";
-    changeQuestionType();
     box.innerHTML = '<div class="success">تمت إضافة السؤال بنجاح.</div>';
     await loadQuestions();
   } catch(e) {
@@ -1865,7 +1844,7 @@ function updateStats() {
 }
 
 function showPage(page) {
-  ["dashboard","exams","questions","results","students","leaderboard"].forEach(p=>{
+  ["dashboard","exams","questions","results","students"].forEach(p=>{
     document.getElementById("page-"+p).classList.toggle("hidden",p!==page);
   });
   // هذه الأقسام جزء من الرئيسية فقط، ولا تظهر أثناء إدارة الامتحانات أو النتائج.
@@ -1883,7 +1862,6 @@ function showPage(page) {
   if (page === "results") renderResults();
   if (page === "questions") loadQuestions();
   if (page === "students") loadStudents();
-  if (page === "leaderboard") loadLeaderboardPage();
 }
 
 let studentSearchTimer = null;
@@ -2117,33 +2095,6 @@ function printStudentProfile(studentId) {
   win.document.open();
   win.document.write(report);
   win.document.close();
-}
-
-async function loadLeaderboardPage() {
-  const box = document.getElementById("leaderboardPageList");
-  if (!box) return;
-  box.innerHTML = '<div class="empty">جاري تحميل الأوائل...</div>';
-  try {
-    let rows = [];
-    try {
-      const response = await fetch("/api/leaderboard", {credentials:"same-origin"});
-      if (response.ok) {
-        const data = await response.json();
-        rows = Array.isArray(data) ? data : (data.leaderboard || data.students || []);
-      }
-    } catch (_) {}
-    if (!rows.length) {
-      rows = [...allResults].sort((a,b)=>normalizedPercentage(b)-normalizedPercentage(a)).slice(0,10);
-    }
-    if (!rows.length) { box.innerHTML = '<div class="empty">لا توجد نتائج لعرض الأوائل حتى الآن.</div>'; return; }
-    box.innerHTML = rows.slice(0,10).map((r,i)=>{
-      const name = r.student_name || r.full_name || r.name || r.username || "طالب";
-      const klass = r.class_name || (r.class_id ? className(r.class_id) : "");
-      const exam = r.exam_title || (r.exam_id ? examName(r.exam_id) : "");
-      const pct = Number(r.percentage ?? r.average_percentage ?? r.score ?? 0) || 0;
-      return `<div class="leaderboard-card"><div class="leaderboard-rank">#${i+1}</div><div class="leaderboard-name">${esc(name)}</div><div class="leaderboard-meta">${esc([klass,exam].filter(Boolean).join(" • ") || "بريق نور")}</div><div class="leaderboard-score">${formatPercent(pct)}</div></div>`;
-    }).join("");
-  } catch (e) { box.innerHTML = `<div class="error">${esc(e.message || "تعذر تحميل لوحة الأوائل")}</div>`; }
 }
 
 function openStudentSite() {
@@ -2968,36 +2919,6 @@ async function loadDashboardOverview(){
     if(recentEl) recentEl.innerHTML = '<div class="dashboard-error">تعذر تحميل أحدث النتائج. تأكد من تسجيل الدخول ثم اضغط تحديث.</div>';
   }
 }
-
-
-async function loadStudentsV2(){
- const body=document.getElementById("studentAccountsBody"), msg=document.getElementById("studentAccountsMessage");
- try{const r=await api("/api/admin/students"); const students=r.students||[]; loadedStudentsV2=students;
- document.getElementById("accountsTotal").textContent=r.total_accounts||0; document.getElementById("accountsShown").textContent=students.length;
- body.innerHTML=students.length?students.map((s,i)=>`<tr><td>${i+1}</td><td><strong>${esc(s.full_name)}</strong></td><td>${esc(s.username)}</td><td>${esc(s.class_name||"")}</td><td><strong>${Number(s.points||0)}</strong></td><td>${Number(s.level||1)}</td><td><button class="btn btn-secondary" type="button" onclick="openEditStudentById(${Number(s.id)})">تعديل</button></td></tr>`).join(""):'<tr><td colspan="7">لا يوجد طلاب.</td></tr>';
- msg.textContent=students.length?`تم تحميل ${students.length} طالب.`:"";
- }catch(e){body.innerHTML=`<tr><td colspan="7">${esc(e.message)}</td></tr>`;}
-}
-loadStudents=loadStudentsV2;
-let loadedStudentsV2 = [];
-function openEditStudentById(id){
- const s=loadedStudentsV2.find(x=>Number(x.id)===Number(id));
- if(!s) return;
- openEditStudent(s);
-}
-function openEditStudent(s){
- const modal=document.getElementById("editStudentModal");
- const idEl=document.getElementById("editStudentId"), nameEl=document.getElementById("editStudentName"), codeEl=document.getElementById("editStudentCode"), pointsEl=document.getElementById("editStudentPoints"), levelEl=document.getElementById("editStudentLevel"), classEl=document.getElementById("editStudentClass"), msgEl=document.getElementById("editStudentMessage");
- idEl.value=s.id; nameEl.value=s.full_name||""; codeEl.value=s.username||""; pointsEl.value=s.points||0; levelEl.value=s.level||1;
- classEl.innerHTML=allClasses.map(c=>`<option value="${c.id}" ${Number(c.id)===Number(s.class_id)?"selected":""}>${esc(c.name)}</option>`).join("");
- msgEl.innerHTML=""; modal.classList.remove("hidden");
-}
-function closeEditStudent(){document.getElementById("editStudentModal").classList.add("hidden");}
-async function saveStudentEdit(){
- try{const id=Number(editStudentId.value); await api(`/api/admin/students/${id}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({full_name:editStudentName.value,username:editStudentCode.value,class_id:Number(editStudentClass.value),points:Number(editStudentPoints.value),level:Number(editStudentLevel.value)})}); closeEditStudent(); await loadStudents();}
- catch(e){editStudentMessage.innerHTML=`<div class="error">${esc(e.message)}</div>`;}
-}
-loadLeaderboardPage=async function(){const box=document.getElementById("leaderboardPageList");box.innerHTML='<div class="empty">جاري تحميل الأوائل...</div>';try{const d=await api('/api/leaderboard');const rows=d.leaderboard||[];box.innerHTML=rows.length?rows.slice(0,20).map((r,i)=>`<div class="leaderboard-card" style="${i===0?'border:2px solid #f4b400;background:linear-gradient(#fffef7,#fff)':''}"><div class="leaderboard-rank">${i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1)}</div><div class="leaderboard-name">${esc(r.full_name)}</div><div class="leaderboard-meta">${esc(r.class_name||'')}</div><div class="leaderboard-score">${Number(r.points||0)} نقطة</div><div class="leaderboard-meta">المستوى ${Number(r.level||1)}</div></div>`).join(''):'<div class="empty">لا توجد بيانات.</div>';}catch(e){box.innerHTML=`<div class="error">${esc(e.message)}</div>`;}};
 
 </script>
 </body>

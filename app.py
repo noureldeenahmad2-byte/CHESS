@@ -39,6 +39,7 @@ _admin_login_attempts = defaultdict(deque)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATABASE = os.path.join(BASE_DIR, "database.db")
 
+
 # ==========================================
 # الاتصال بقاعدة البيانات
 # ==========================================
@@ -47,6 +48,7 @@ def get_db():
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
     return conn
+
 
 # ==========================================
 # إنشاء قاعدة البيانات
@@ -138,28 +140,11 @@ def init_database():
         )
     """)
 
-    # تحديث بنية جدول الأسئلة مع الحفاظ على الأسئلة القديمة
-    question_columns = [row[1] for row in cursor.execute("PRAGMA table_info(questions)").fetchall()]
-
-    if "question_type" not in question_columns:
-        cursor.execute(
-            "ALTER TABLE questions ADD COLUMN question_type TEXT NOT NULL DEFAULT 'multiple_choice'"
-        )
-
     # ربط النتائج بحساب الطالب اختياريًا، مع الحفاظ على النتائج القديمة كما هي.
-    # نقاط ومستوى الطالب القابلان للتعديل من لوحة الإدارة
-    account_columns = [row[1] for row in cursor.execute("PRAGMA table_info(student_accounts)").fetchall()]
-    if "points" not in account_columns:
-        cursor.execute("ALTER TABLE student_accounts ADD COLUMN points INTEGER NOT NULL DEFAULT 0")
-    if "level" not in account_columns:
-        cursor.execute("ALTER TABLE student_accounts ADD COLUMN level INTEGER NOT NULL DEFAULT 1")
-
     result_columns = [row[1] for row in cursor.execute("PRAGMA table_info(results)").fetchall()]
-
     if "student_account_id" not in result_columns:
-        cursor.execute(
-            "ALTER TABLE results ADD COLUMN student_account_id INTEGER"
-        )
+        cursor.execute("ALTER TABLE results ADD COLUMN student_account_id INTEGER")
+
     # الصفوف
     classes = [
         "الصف الرابع الابتدائي",
@@ -179,6 +164,7 @@ def init_database():
     conn.commit()
     conn.close()
 
+
 # ==========================================
 # حماية لوحة التحكم
 # ==========================================
@@ -197,6 +183,7 @@ def admin_required(func):
 
     return wrapper
 
+
 # ==========================================
 # صفحات الموقع
 # ==========================================
@@ -205,31 +192,39 @@ def admin_required(func):
 def home():
     return send_from_directory(BASE_DIR, "index.html")
 
+
+
 @app.route("/images/<path:filename>")
 def teacher_images(filename):
     return send_from_directory(os.path.join(BASE_DIR, "images"), filename)
+
 
 @app.route("/index.html")
 def index_page():
     return send_from_directory(BASE_DIR, "index.html")
 
+
 @app.route("/exams.html")
 def exams_page():
     return send_from_directory(BASE_DIR, "exams.html")
 
+
 @app.route("/student.html")
 def student_page():
     return send_from_directory(BASE_DIR, "student.html")
+
 
 @app.route("/student-login")
 @app.route("/student-login.html")
 def student_login_page():
     return send_from_directory(BASE_DIR, "student-login.html")
 
+
 @app.route("/student-dashboard")
 @app.route("/student-dashboard.html")
 def student_dashboard_page():
     return send_from_directory(BASE_DIR, "student-dashboard.html")
+
 
 @app.route("/api/student/register", methods=["POST"])
 def student_register():
@@ -267,6 +262,7 @@ def student_register():
     session["student_account_id"] = account_id
     return jsonify({"success": True, "message": "تم إنشاء الحساب بنجاح", "redirect": "/student-dashboard"})
 
+
 @app.route("/api/student/login", methods=["POST"])
 def student_login():
     data = request.get_json(silent=True) or {}
@@ -279,6 +275,7 @@ def student_login():
         return jsonify({"error": "اسم المستخدم أو كلمة المرور غير صحيحة"}), 401
     session["student_account_id"] = row["id"]
     return jsonify({"success": True, "redirect": "/student-dashboard"})
+
 
 @app.route("/api/student/me", methods=["GET"])
 def student_me():
@@ -294,6 +291,7 @@ def student_me():
         return jsonify({"error": "الحساب غير موجود"}), 401
     return jsonify(dict(row))
 
+
 @app.route("/api/student/results", methods=["GET"])
 def student_results():
     account_id = session.get("student_account_id")
@@ -307,22 +305,27 @@ def student_results():
     conn.close()
     return jsonify([dict(row) for row in rows])
 
+
 @app.route("/api/student/logout", methods=["POST"])
 def student_logout():
     session.pop("student_account_id", None)
     return jsonify({"success": True, "redirect": "/student-login"})
 
+
 @app.route("/exam.html")
 def exam_page():
     return send_from_directory(BASE_DIR, "exam.html")
+
 
 @app.route("/admin")
 def admin_page():
     return send_from_directory(BASE_DIR, "admin.html")
 
+
 @app.route("/admin.html")
 def admin_html_page():
     return send_from_directory(BASE_DIR, "admin.html")
+
 
 # ==========================================
 # الصفوف
@@ -351,6 +354,7 @@ def get_classes():
         })
 
     return jsonify(classes)
+
 
 # ==========================================
 # امتحانات صف معين
@@ -399,6 +403,7 @@ def get_exams(class_id):
 
     return jsonify(result)
 
+
 # ==========================================
 # بيانات امتحان واحد
 # ==========================================
@@ -423,6 +428,7 @@ def get_exam(exam_id):
     """, (exam_id,)).fetchone()
 
     if exam is None:
+
         conn.close()
 
         return jsonify({
@@ -433,7 +439,6 @@ def get_exam(exam_id):
         SELECT
             id,
             question,
-            question_type,
             option_a,
             option_b,
             option_c,
@@ -452,7 +457,6 @@ def get_exam(exam_id):
         question_list.append({
             "id": q["id"],
             "question": q["question"],
-            "question_type": q["question_type"],
             "option_a": q["option_a"],
             "option_b": q["option_b"],
             "option_c": q["option_c"],
@@ -468,6 +472,7 @@ def get_exam(exam_id):
         "published": exam["published"],
         "questions": question_list
     })
+
 
 # ==========================================
 # تسجيل دخول المدرس
@@ -507,6 +512,7 @@ def admin_login():
         "error": "كلمة المرور غير صحيحة"
     }), 401
 
+
 # ==========================================
 # تسجيل خروج المدرس
 # ==========================================
@@ -520,6 +526,7 @@ def admin_logout():
         "success": True
     })
 
+
 # ==========================================
 # التأكد من تسجيل الدخول
 # ==========================================
@@ -532,6 +539,7 @@ def admin_check():
             session.get("admin_logged_in")
         )
     })
+
 
 # ==========================================
 # جميع الامتحانات للوحة التحكم
@@ -580,6 +588,7 @@ def admin_get_exams():
         })
 
     return jsonify(result)
+
 
 # ==========================================
 # إنشاء امتحان
@@ -658,6 +667,7 @@ def create_exam():
         "id": exam_id
     })
 
+
 # ==========================================
 # نشر / إلغاء نشر امتحان
 # ==========================================
@@ -705,6 +715,7 @@ def publish_exam(exam_id):
         "success": True
     })
 
+
 # ==========================================
 # حذف امتحان
 # ==========================================
@@ -740,6 +751,7 @@ def delete_exam(exam_id):
         "success": True
     })
 
+
 # ==========================================
 # إضافة سؤال
 # ==========================================
@@ -752,16 +764,10 @@ def create_question():
 
     exam_id = data.get("exam_id")
     question = str(data.get("question", "")).strip()
-
-    question_type = str(
-        data.get("question_type", "multiple_choice")
-    ).strip().lower()
-
     option_a = str(data.get("option_a", "")).strip()
     option_b = str(data.get("option_b", "")).strip()
     option_c = str(data.get("option_c", "")).strip()
     option_d = str(data.get("option_d", "")).strip()
-
     correct_answer = str(
         data.get("correct_answer", "")
     ).strip().lower()
@@ -776,36 +782,22 @@ def create_question():
             "error": "اكتب السؤال"
         }), 400
 
-    if question_type not in ["multiple_choice", "true_false"]:
+    if not option_a or not option_b or not option_c or not option_d:
+
         return jsonify({
-            "error": "نوع السؤال غير صحيح"
+            "error": "اكتب جميع الاختيارات"
         }), 400
 
-    # سؤال صح أو خطأ
-    if question_type == "true_false":
+    if correct_answer not in [
+        "a",
+        "b",
+        "c",
+        "d"
+    ]:
 
-        option_a = "صح"
-        option_b = "خطأ"
-        option_c = ""
-        option_d = ""
-
-        if correct_answer not in ["a", "b"]:
-            return jsonify({
-                "error": "اختر صح أو خطأ كإجابة صحيحة"
-            }), 400
-
-    # سؤال اختيار من متعدد
-    else:
-
-        if not option_a or not option_b or not option_c or not option_d:
-            return jsonify({
-                "error": "اكتب جميع الاختيارات"
-            }), 400
-
-        if correct_answer not in ["a", "b", "c", "d"]:
-            return jsonify({
-                "error": "الإجابة الصحيحة يجب أن تكون A أو B أو C أو D"
-            }), 400
+        return jsonify({
+            "error": "الإجابة الصحيحة يجب أن تكون A أو B أو C أو D"
+        }), 400
 
     conn = get_db()
 
@@ -828,18 +820,16 @@ def create_question():
         (
             exam_id,
             question,
-            question_type,
             option_a,
             option_b,
             option_c,
             option_d,
             correct_answer
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     """, (
         exam_id,
         question,
-        question_type,
         option_a,
         option_b,
         option_c,
@@ -853,6 +843,8 @@ def create_question():
     return jsonify({
         "success": True
     })
+
+
 # ==========================================
 # عرض أسئلة امتحان في لوحة التحكم
 # ==========================================
@@ -871,7 +863,6 @@ def admin_get_questions(exam_id):
             id,
             exam_id,
             question,
-            question_type,
             option_a,
             option_b,
             option_c,
@@ -892,7 +883,6 @@ def admin_get_questions(exam_id):
             "id": q["id"],
             "exam_id": q["exam_id"],
             "question": q["question"],
-            "question_type": q["question_type"],
             "option_a": q["option_a"],
             "option_b": q["option_b"],
             "option_c": q["option_c"],
@@ -901,6 +891,7 @@ def admin_get_questions(exam_id):
         })
 
     return jsonify(result)
+
 
 # ==========================================
 # حذف سؤال
@@ -926,6 +917,7 @@ def delete_question(question_id):
     return jsonify({
         "success": True
     })
+
 
 # ==========================================
 # تسليم الامتحان
@@ -1097,6 +1089,7 @@ def submit_exam():
         "percentage": percentage
     })
 
+
 # ==========================================
 # نتائج الطلاب
 # ==========================================
@@ -1247,6 +1240,7 @@ def admin_result_details(result_id):
         "answers": answer_list
     })
 
+
 # ==========================================
 # تعديل نتيجة طالب
 # ==========================================
@@ -1345,6 +1339,7 @@ def admin_update_result(result_id):
         "percentage": percentage
     })
 
+
 # ==========================================
 # حذف نتيجة طالب
 # ==========================================
@@ -1389,6 +1384,7 @@ def admin_delete_result(result_id):
         "success": True,
         "message": "تم حذف النتيجة بنجاح"
     })
+
 
 # ==========================================
 # تعديل امتحان
@@ -1461,6 +1457,7 @@ def update_exam(exam_id):
         "message": "تم تعديل الامتحان بنجاح"
     })
 
+
 # ==========================================
 # تعديل سؤال
 # ==========================================
@@ -1471,15 +1468,12 @@ def update_exam(exam_id):
 )
 @admin_required
 def update_question(question_id):
+
     data = request.get_json(silent=True) or {}
 
     question = str(
         data.get("question", "")
     ).strip()
-
-    question_type = str(
-        data.get("question_type", "multiple_choice")
-    ).strip().lower()
 
     option_a = str(
         data.get("option_a", "")
@@ -1501,42 +1495,36 @@ def update_question(question_id):
         data.get("correct_answer", "")
     ).strip().lower()
 
+
     if not question:
         return jsonify({
             "error": "اكتب السؤال"
         }), 400
 
-    if question_type not in [
-        "multiple_choice",
-        "true_false"
-    ]:
+
+    if not option_a or not option_b:
         return jsonify({
-            "error": "نوع السؤال غير صحيح"
+            "error": "اكتب الاختيارات"
         }), 400
 
-    # سؤال صح أو خطأ
-    if question_type == "true_false":
-        option_a = "صح"
-        option_b = "خطأ"
-        option_c = ""
-        option_d = ""
 
-        if correct_answer not in ["a", "b"]:
-            return jsonify({
-                "error": "اختر صح أو خطأ كإجابة صحيحة"
-            }), 400
+    if not option_c or not option_d:
+        return jsonify({
+            "error": "اكتب جميع الاختيارات"
+        }), 400
 
-    # سؤال اختيار من متعدد
-    else:
-        if not option_a or not option_b or not option_c or not option_d:
-            return jsonify({
-                "error": "اكتب جميع الاختيارات"
-            }), 400
 
-        if correct_answer not in ["a", "b", "c", "d"]:
-            return jsonify({
-                "error": "الإجابة الصحيحة يجب أن تكون A أو B أو C أو D"
-            }), 400
+    if correct_answer not in [
+        "a",
+        "b",
+        "c",
+        "d"
+    ]:
+
+        return jsonify({
+            "error": "الإجابة الصحيحة غير صحيحة"
+        }), 400
+
 
     conn = get_db()
 
@@ -1546,27 +1534,30 @@ def update_question(question_id):
         WHERE id = ?
     """, (question_id,)).fetchone()
 
+
     if existing is None:
+
         conn.close()
 
         return jsonify({
             "error": "السؤال غير موجود"
         }), 404
 
+
     conn.execute("""
         UPDATE questions
+
         SET
             question = ?,
-            question_type = ?,
             option_a = ?,
             option_b = ?,
             option_c = ?,
             option_d = ?,
             correct_answer = ?
+
         WHERE id = ?
     """, (
         question,
-        question_type,
         option_a,
         option_b,
         option_c,
@@ -1575,13 +1566,16 @@ def update_question(question_id):
         question_id
     ))
 
+
     conn.commit()
     conn.close()
+
 
     return jsonify({
         "success": True,
         "message": "تم تعديل السؤال بنجاح"
-    })         
+    })
+
 
 # ==========================================
 # إدارة حسابات الطلاب - لوحة المدرس
@@ -1596,7 +1590,7 @@ def admin_get_students():
     conn = get_db()
     query = """
         SELECT
-            s.id, s.full_name, s.username, s.class_id, s.created_at, s.points, s.level,
+            s.id, s.full_name, s.username, s.class_id, s.created_at,
             c.name AS class_name,
             COUNT(DISTINCT r.id) AS result_count,
             COALESCE(ROUND(AVG(r.percentage), 1), 0) AS average_percentage,
@@ -1627,44 +1621,6 @@ def admin_get_students():
         "shown": len(rows)
     })
 
-@app.route("/api/admin/students/<int:student_id>", methods=["PUT"])
-@admin_required
-def admin_update_student(student_id):
-    data = request.get_json(silent=True) or {}
-    full_name = str(data.get("full_name", "")).strip()
-    username = str(data.get("username", "")).strip().lower()
-    try:
-        class_id = int(data.get("class_id"))
-        points = max(0, int(data.get("points", 0)))
-        level = max(1, int(data.get("level", 1)))
-    except (TypeError, ValueError):
-        return jsonify({"error":"تحقق من الصف والنقاط والمستوى"}), 400
-    if len(full_name) < 3 or len(username) < 4:
-        return jsonify({"error":"اسم الطالب أو الكود غير صحيح"}), 400
-    conn = get_db()
-    if not conn.execute("SELECT id FROM classes WHERE id=?", (class_id,)).fetchone():
-        conn.close(); return jsonify({"error":"الصف الدراسي غير صحيح"}), 400
-    try:
-        cur = conn.execute("UPDATE student_accounts SET full_name=?, username=?, class_id=?, points=?, level=? WHERE id=?",
-                           (full_name, username, class_id, points, level, student_id))
-        if not cur.rowcount:
-            conn.close(); return jsonify({"error":"الطالب غير موجود"}), 404
-        conn.commit()
-    except sqlite3.IntegrityError:
-        conn.close(); return jsonify({"error":"كود الطالب مستخدم بالفعل"}), 409
-    conn.close()
-    return jsonify({"success":True, "message":"تم حفظ تعديلات الطالب"})
-
-@app.route("/api/leaderboard", methods=["GET"])
-def public_leaderboard():
-    conn = get_db()
-    rows = conn.execute("""
-        SELECT s.id, s.full_name, s.username, s.points, s.level, c.name AS class_name
-        FROM student_accounts s JOIN classes c ON c.id=s.class_id
-        ORDER BY s.points DESC, s.level DESC, s.full_name ASC LIMIT 50
-    """).fetchall()
-    conn.close()
-    return jsonify({"leaderboard":[dict(r) for r in rows]})
 
 @app.route("/api/admin/students/<int:student_id>", methods=["GET"])
 @admin_required
@@ -1704,6 +1660,7 @@ def admin_get_student_profile(student_id):
         "student": dict(student),
         "results": [dict(row) for row in results]
     })
+
 
 # ==========================================
 # تصدير كشف الطلاب والدرجات إلى CSV متوافق مع Excel
@@ -1794,9 +1751,8 @@ if __name__ == "__main__":
     print("كلمة مرور لوحة التحكم محفوظة في private_settings.py")
     print("=" * 50)
 
-app.run(
-    host="0.0.0.0",
-    port=5000,
-    debug=False
-)
-
+    app.run(
+        host="127.0.0.1",
+        port=5000,
+        debug=False
+    )
